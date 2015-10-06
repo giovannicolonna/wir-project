@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 import requests
 import re
+import time
+
 
 LOGFILE = "top250-log.txt"
 log = open(LOGFILE, "w")
@@ -10,7 +12,18 @@ baseUrl = "http://www.beeradvocate.com"
 url = baseUrl+"/lists/top/"
 
 log.write("Requesting page: "+url+"\n")
-html = requests.get(url).text  # try except
+
+netControl = True
+while(netControl):
+    try:
+        html = requests.get(url).text  # try except
+        netControl = False
+        log.write("OK: Connection established\n")
+    except requests.ConnectionError:
+        #cannot connect, wait and retry
+        time.sleep(4)
+        log.write("ERR: Connection error, retrying...\n")
+
 soup = BeautifulSoup(html, parser)
 
 log.write("Retrieving links...\n")
@@ -37,11 +50,18 @@ for link in links:
 
 	topr = "?sort=topr&start="+str(offset)
 	url = link+topr
-
-	html = requests.get(url).text
+	#Connection, try-except
+	netControl = True
+	while (netControl):
+		try:
+			html = requests.get(url).text
+			netControl = False
+		except requests.ConnectionError:
+			time.sleep(4)
+			log.write("ERR: Connection error in beer page, retrying....")
 	soup = BeautifulSoup(html, parser)
 	rev = soup.find("span", "ba-reviews").string
-	rev = int(re.sub(",", "", rev))  #, come separatore migliaia non piace a python
+	rev = int(re.sub(",", "", rev))
 
 	log.write("\tNumber of reviews: "+str(rev)+"\n")
 	log.write("\tReviews downloaded: "+str(offset)+"\n\t\t"+str(url)+"\n")
@@ -53,9 +73,16 @@ for link in links:
 	while (offset < rev and offset <= 100):
 		topr = "?sort=topr&start="+str(offset)
 		url = link+topr
-		html = requests.get(url).text  # try except da mettere in un ciclo. deve scaricare la pagina
+		#Connection: try-except
+		netControl = True
+		while (netControl):
+			try:
+				html = requests.get(url).text
+				netControl = False
+			except requests.ConnectionError:
+				time.sleep(4)
+				log.write("ERR: Connection error in reviews download page, retrying....")
 		soup = BeautifulSoup(html, parser)
-
 		log.write("\tReviews downloaded: "+str(offset)+"\n\t\t"+str(url)+"\n")
 		output = open("top250/"+str(count)+"-"+str(offset)+".html", "w")
 		output.write(str(soup))
@@ -64,5 +91,12 @@ for link in links:
 
 	if count > 3:
 		break
+
+
+##
+##    TODO: building dataset from HTML files for top-250
+##
+
+
 
 log.close()
