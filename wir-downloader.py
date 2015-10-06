@@ -19,10 +19,11 @@ while(netControl):
         html = requests.get(url).text  # try except
         netControl = False
         log.write("OK: Connection established\n")
-    except requests.ConnectionError:
-        #cannot connect, wait and retry
-        time.sleep(4)
-        log.write("ERR: Connection error, retrying...\n")
+    except requests.RequestException:
+		time.sleep(4)
+		print "ERR: Connection error (first connection), retrying...\n"
+		log.write("ERR: Connection error (first connection)\n")
+
 
 soup = BeautifulSoup(html, parser)
 
@@ -56,9 +57,10 @@ for link in links:
 		try:
 			html = requests.get(url).text
 			netControl = False
-		except requests.ConnectionError:
+		except requests.RequestException:
 			time.sleep(4)
-			log.write("ERR: Connection error in beer page, retrying....")
+			print("ERR: Connection error in beer page, retrying...\n")
+			log.write("ERR: Connection error in beer page, retrying...\n")
 	soup = BeautifulSoup(html, parser)
 	rev = soup.find("span", "ba-reviews").string
 	rev = int(re.sub(",", "", rev))
@@ -79,9 +81,10 @@ for link in links:
 			try:
 				html = requests.get(url).text
 				netControl = False
-			except requests.ConnectionError:
+			except requests.RequestException:
 				time.sleep(4)
-				log.write("ERR: Connection error in reviews download page, retrying....")
+				print "ERR: Connection error in reviews download page, retrying..."
+				log.write("ERR: Connection error in reviews download page, retrying...\n")
 		soup = BeautifulSoup(html, parser)
 		log.write("\tReviews downloaded: "+str(offset)+"\n\t\t"+str(url)+"\n")
 		output = open("top250/"+str(count)+"-"+str(offset)+".html", "w")
