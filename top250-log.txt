@@ -1,0 +1,116 @@
+Requesting page: http://www.beeradvocate.com/lists/top/
+ERR: Connection error (first connection)
+ERR: Connection error (first connection)
+ERR: Connection error (first connection)
+OK: Connection established
+Retrieving links...
+Links retrieved: 250
+
+Downloading reviews...
+Beer number: 1
+	Number of reviews: 74
+	Reviews downloaded: 0
+		http://www.beeradvocate.com/beer/profile/23222/78820/?sort=topr&start=0
+	Reviews downloaded: 25
+		http://www.beeradvocate.com/beer/profile/23222/78820/?sort=topr&start=25
+	Reviews downloaded: 50
+		http://www.beeradvocate.com/beer/profile/23222/78820/?sort=topr&start=50
+Beer number: 2
+	Number of reviews: 145
+	Reviews downloaded: 0
+		http://www.beeradvocate.com/beer/profile/28743/136936/?sort=topr&start=0
+	Reviews downloaded: 25
+		http://www.beeradvocate.com/beer/profile/28743/136936/?sort=topr&start=25
+	Reviews downloaded: 50
+		http://www.beeradvocate.com/beer/profile/28743/136936/?sort=topr&start=50
+	Reviews downloaded: 75
+		http://www.beeradvocate.com/beer/profile/28743/136936/?sort=topr&start=75
+	Reviews downloaded: 100
+		http://www.beeradvocate.com/beer/profile/28743/136936/?sort=topr&start=100
+Beer number: 3
+	Number of reviews: 104
+	Reviews downloaded: 0
+		http://www.beeradvocate.com/beer/profile/23222/76421/?sort=topr&start=0
+	Reviews downloaded: 25
+		http://www.beeradvocate.com/beer/profile/23222/76421/?sort=topr&start=25
+	Reviews downloaded: 50
+		http://www.beeradvocate.com/beer/profile/23222/76421/?sort=topr&start=50
+	Reviews downloaded: 75
+		http://www.beeradvocate.com/beer/profile/23222/76421/?sort=topr&start=75
+	Reviews downloaded: 100
+		http://www.beeradvocate.com/beer/profile/23222/76421/?sort=topr&start=100
+Beer number: 4
+	Number of reviews: 894
+	Reviews downloaded: 0
+		http://www.beeradvocate.com/beer/profile/863/21690/?sort=topr&start=0
+	Reviews downloaded: 25
+		http://www.beeradvocate.com/beer/profile/863/21690/?sort=topr&start=25
+	Reviews downloaded: 50
+		http://www.beeradvocate.com/beer/profile/863/21690/?sort=topr&start=50
+	Reviews downloaded: 75
+		http://www.beeradvocate.com/beer/profile/863/21690/?sort=topr&start=75
+	Reviews downloaded: 100
+		http://www.beeradvocate.com/beer/profile/863/21690/?sort=topr&start=100
+Beer number: 5
+	Number of reviews: 2032
+	Reviews downloaded: 0
+		http://www.beeradvocate.com/beer/profile/27039/16814/?sort=topr&start=0
+ERR: Connection error in reviews download page, retrying....
+ERR: Connection error in reviews download page, retrying....
+ERR: Connection error in reviews download page, retrying....
+ERR: Connection error in reviews download page, retrying....
+ERR: Connection error in reviews download page, retrying....
+ERR: Connection error in reviews download page, retrying....
+ERR: Connection error in reviews download page, retrying....
+ERR: Connection error in reviews download page, retrying....
+ERR: Connection error in reviews download page, retrying....
+ERR: Connection error in reviews download page, retrying....
+ERR: Connection error in reviews download page, retrying....
+	Reviews downloaded: 25
+		http://www.beeradvocate.com/beer/profile/27039/16814/?sort=topr&start=25
+	Reviews downloaded: 50
+		http://www.beeradvocate.com/beer/profile/27039/16814/?sort=topr&start=50
+	Reviews downloaded: 75
+		http://www.beeradvocate.com/beer/profile/27039/16814/?sort=topr&start=75
+	Reviews downloaded: 100
+		http://www.beeradvocate.com/beer/profile/27039/16814/?sort=topr&start=100
+Beer number: 6
+	Number of reviews: 925
+	Reviews downloaded: 0
+		http://www.beeradvocate.com/beer/profile/1199/47658/?sort=topr&start=0
+	Reviews downloaded: 25
+		http://www.beeradvocate.com/beer/profile/1199/47658/?sort=topr&start=25
+	Reviews downloaded: 50
+		http://www.beeradvocate.com/beer/profile/1199/47658/?sort=topr&start=50
+	Reviews downloaded: 75
+		http://www.beeradvocate.com/beer/profile/1199/47658/?sort=topr&start=75
+	Reviews downloaded: 100
+		http://www.beeradvocate.com/beer/profile/1199/47658/?sort=topr&start=100
+Beer number: 7
+	Number of reviews: 261
+	Reviews downloaded: 0
+		http://www.beeradvocate.com/beer/profile/26/42349/?sort=topr&start=0
+	Reviews downloaded: 25
+		http://www.beeradvocate.com/beer/profile/26/42349/?sort=topr&start=25
+	Reviews downloaded: 50
+		http://www.beeradvocate.com/beer/profile/26/42349/?sort=topr&start=50
+	Reviews downloaded: 75
+		http://www.beeradvocate.com/beer/profile/26/42349/?sort=topr&start=75
+	Reviews downloaded: 100
+		http://www.beeradvocate.com/beer/profile/26/42349/?sort=topr&start=100
+Beer number: 8
+	Number of reviews: 1713
+	Reviews downloaded: 0
+		http://www.beeradvocate.com/beer/profile/313/1545/?sort=topr&start=0
+	Reviews downloaded: 25
+		http://www.beeradvocate.com/beer/profile/313/1545/?sort=topr&start=25
+	Reviews downloaded: 50
+		http://www.beeradvocate.com/beer/profile/313/1545/?sort=topr&start=50
+	Reviews downloaded: 75
+		http://www.beeradvocate.com/beer/profile/313/1545/?sort=topr&start=75
+	Reviews downloaded: 100
+		http://www.beeradvocate.com/beer/profile/313/1545/?sort=topr&start=100
+Beer number: 9
+	Number of reviews: 3439
+	Reviews downloaded: 0
+		http://www.beeradvocate.com/beer/profile/863/7971/?sort=topr&start=0
