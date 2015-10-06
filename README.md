@@ -16,10 +16,10 @@ Beers.json:
 [
 	{
 		position:
-		nome:
-		birrificio:
+		name:
+		brewer:
 		ba_score:
-		reviews:
+		num_rev:
 		hads:
 		avg:
 		pDev:
@@ -37,7 +37,6 @@ Beers.json:
 				overall:
 				text:
 				reviewer:
-				date:
 			},
 			{
 				...
