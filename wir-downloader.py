@@ -89,8 +89,7 @@ for link in links:
 		output.close()
 		offset += 25
 
-	if count > 3:
-		break
+
 
 
 ##
