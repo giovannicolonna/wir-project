@@ -40,7 +40,7 @@ for a in soup.select("td span a"):
 log.write("Links retrieved: "+str(len(links))+"\n\n")
 
 #per ogni link scarico le prime 100 recensioni e salvo in locale... (4 pag)
-#file.write(soup.prettify())
+
 log.write("Downloading reviews...\n")
 count = 0
 for link in links:
