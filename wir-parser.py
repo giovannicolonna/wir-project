@@ -5,6 +5,8 @@ import json
 from bs4 import BeautifulSoup
 from collections import OrderedDict
 
+LOGFILE = "parser-log.txt"
+log = open(LOGFILE,"w")
 
 def sistemaTesto(text):
     try:
@@ -20,11 +22,12 @@ def sistemaTesto(text):
             return descr[1:]
 
     except:
+        log.write("WARNING: a description does not respect standards, could contain invalid characters\n")
         return text
 
 directory = "top250/"
 htmls = sorted(os.listdir(directory))
-## edit gio: sul mio pc non legge in ordine i file solo con listdir, ho aggiunto il "sorted"
+
 
 beers = []
 old = "1"
@@ -33,6 +36,7 @@ reviews = []
 
 for html in htmls:
     print html
+    log.write("Reading html file: "+str(html)+"\n")
     b = html.split("-")[0]
     r = html.split("-")[1]
 
@@ -45,7 +49,7 @@ for html in htmls:
 
     soup = BeautifulSoup(open(directory+html), "lxml")
 
-    if int(r.split('.')[0]) == 0:   # l'errore stava qui, r[0] == 0 dava sempre false (char is different from int)
+    if int(r.split('.')[0]) == 0:
         position = b
         name = soup.find('title').string.split("|")[0].strip()
         brewer = soup.find('title').string.split("|")[1].strip()
@@ -75,10 +79,10 @@ for html in htmls:
         beer['pDev'] = pDev
         beer['state'] = state
         beer['style'] = style
-        beer['abv'] = abv  ## errore di encoding qua
+        beer['abv'] = abv
 
     for block in soup.find_all(id='rating_fullview_content_2'):
-
+        log.write("\tReading reviews...\n")
         rate = block.find('span', 'BAscore_norm').get_text().strip()
 
         try:
@@ -126,10 +130,13 @@ for html in htmls:
         review['reviewer'] = reviewer
 
         reviews.append(review)
+        log.write("\tReviews of this file have been successfully read.\n")
 
     old = b
-
+log.write("Building JSON dataset...\n")
 output = open("top250.json", 'w')
 output.write(json.dumps(beers))
 output.close()
+log.write("JSON dataset has been successfully built.\n")
+log.close()
 
