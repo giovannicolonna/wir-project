@@ -3,13 +3,14 @@ __author__ = 'Federica'
 import os
 import json
 from bs4 import BeautifulSoup
+from collections import OrderedDict
 
 
-def sistemaTesto( text ):
+def sistemaTesto(text):
     try:
         descr = text
         descr = descr.split("|")[4].split("overall: ")[1]
-        if descr[1]=='.':
+        if descr[1] == '.':
             if descr[3].isdigit():
                 return descr[4:]
 
@@ -23,14 +24,12 @@ def sistemaTesto( text ):
 
 directory = "top250/"
 htmls = sorted(os.listdir(directory))
-##edit gio: sul mio pc non legge in ordine i file solo con listdir, ho aggiunto il "sorted"
+## edit gio: sul mio pc non legge in ordine i file solo con listdir, ho aggiunto il "sorted"
 
 beers = []
 old = "1"
-beer = {}
+beer = OrderedDict()  # trasfrmandoli in OrderedDict si mantiene l'ordine di inserimento
 reviews = []
-
-
 
 for html in htmls:
     print html
@@ -41,12 +40,12 @@ for html in htmls:
 
         beer['reviews'] = reviews
         beers.append(beer)
-        beer = {}
+        beer = OrderedDict()  # trasfrmandoli in OrderedDict si mantiene l'ordine di inserimento
         reviews = []
 
     soup = BeautifulSoup(open(directory+html))
 
-    if int(r.split('.')[0]) == 0:   #l'errore stava qui, r[0] == 0 dava sempre false (char is different from int)
+    if int(r.split('.')[0]) == 0:   # l'errore stava qui, r[0] == 0 dava sempre false (char is different from int)
         position = b
         name = soup.find('title').string.split("|")[0].strip()
         brewer = soup.find('title').string.split("|")[1].strip()
@@ -76,8 +75,7 @@ for html in htmls:
         beer['pDev'] = pDev
         beer['state'] = state
         beer['style'] = style
-        beer['abv'] = abv ##errore di encoding qua
-
+        beer['abv'] = abv  ## errore di encoding qua
 
     for block in soup.find_all(id='rating_fullview_content_2'):
 
@@ -90,6 +88,7 @@ for html in htmls:
                 rDev = block.find('span', attrs={'style':'color:#990000;'}).get_text().strip()
             except Exception:
                 rDev = block.find('span', 'rAvg_norm').get_text().strip()
+
         text = block.get_text()
         text = sistemaTesto(text)
         i = 1
@@ -115,7 +114,7 @@ for html in htmls:
                         reviewer = user.get_text()
             i += 1
 
-        review = {}
+        review = OrderedDict()  # trasfrmandoli in OrderedDict si mantiene l'ordine di inserimento
         review['rate'] = rate
         review['rDev'] = rDev
         review['look'] = look
