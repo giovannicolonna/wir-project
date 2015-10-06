@@ -43,7 +43,7 @@ for html in htmls:
         beer = OrderedDict()  # trasfrmandoli in OrderedDict si mantiene l'ordine di inserimento
         reviews = []
 
-    soup = BeautifulSoup(open(directory+html))
+    soup = BeautifulSoup(open(directory+html), "lxml")
 
     if int(r.split('.')[0]) == 0:   # l'errore stava qui, r[0] == 0 dava sempre false (char is different from int)
         position = b
@@ -63,7 +63,7 @@ for html in htmls:
                 state = link.string.strip()
             if "/beer/style" in url:
                 style = link.string.strip()
-                abv = link.nextSibling.encode('utf-8').replace("|", "").strip()
+                abv = link.nextSibling.replace("|", "").strip()
 
         beer['position'] = position
         beer['name'] = name
