@@ -93,12 +93,4 @@ for link in links:
 		offset += 25
 
 
-
-
-##
-##    TODO: building dataset from HTML files for top-250
-##
-
-
-
 log.close()
