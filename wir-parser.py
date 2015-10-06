@@ -25,12 +25,10 @@ directory = "top250/"
 htmls = sorted(os.listdir(directory))
 ##edit gio: sul mio pc non legge in ordine i file solo con listdir, ho aggiunto il "sorted"
 
-
 beers = []
 old = "1"
 beer = {}
 reviews = []
-
 
 for html in htmls:
     print html
