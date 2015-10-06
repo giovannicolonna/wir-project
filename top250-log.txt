@@ -1,4 +1,5 @@
 Requesting page: http://www.beeradvocate.com/lists/top/
+OK: Connection established
 Retrieving links...
 Links retrieved: 250
 
