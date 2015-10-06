@@ -31,6 +31,7 @@ beer = {}
 reviews = []
 
 
+
 for html in htmls:
     print html
     b = html.split("-")[0]
