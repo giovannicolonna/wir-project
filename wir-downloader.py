@@ -1,16 +1,19 @@
-from pprint import PrettyPrinter
 from bs4 import BeautifulSoup
 import requests
+import re
 
-pp = PrettyPrinter()
+LOGFILE = "top250-log.txt"
+log = open(LOGFILE, "w")
 
 parser = "lxml"
 baseUrl = "http://www.beeradvocate.com"
 url = baseUrl+"/lists/top/"
 
-html = requests.get(url).text
+log.write("Requesting page: "+url+"\n")
+html = requests.get(url).text  # try except
 soup = BeautifulSoup(html, parser)
 
+log.write("Retrieving links...\n")
 links = []
 
 line = 0
@@ -20,19 +23,46 @@ for a in soup.select("td span a"):
 		links.append(link)
 	line += 1
 
-print len(links)
-#pp.pprint(links)
+log.write("Links retrieved: "+str(len(links))+"\n\n")
 
 #per ogni link scarico le prime 100 recensioni e salvo in locale... (4 pag)
 #file.write(soup.prettify())
-
-offset = "0"
-topr = "?sort=topr&start="+offset
-
+log.write("Downloading reviews...\n")
+count = 0
 for link in links:
+	offset = 0
+	count += 1
+	print "Beer number", count
+	log.write("Beer number: "+str(count)+"\n")
+
+	topr = "?sort=topr&start="+str(offset)
 	url = link+topr
-	print url
+
 	html = requests.get(url).text
 	soup = BeautifulSoup(html, parser)
-	print soup.find()
-	break
+	rev = soup.find("span", "ba-reviews").string
+	rev = int(re.sub(",", "", rev))  #, come separatore migliaia non piace a python
+
+	log.write("\tNumber of reviews: "+str(rev)+"\n")
+	log.write("\tReviews downloaded: "+str(offset)+"\n\t\t"+str(url)+"\n")
+	output = open("top250/"+str(count)+"-"+str(offset)+".html", "w")
+	output.write(str(soup))
+	output.close()
+
+	offset += 25
+	while (offset < rev and offset <= 100):
+		topr = "?sort=topr&start="+str(offset)
+		url = link+topr
+		html = requests.get(url).text  # try except da mettere in un ciclo. deve scaricare la pagina
+		soup = BeautifulSoup(html, parser)
+
+		log.write("\tReviews downloaded: "+str(offset)+"\n\t\t"+str(url)+"\n")
+		output = open("top250/"+str(count)+"-"+str(offset)+".html", "w")
+		output.write(str(soup))
+		output.close()
+		offset += 25
+
+	if count > 3:
+		break
+
+log.close()
