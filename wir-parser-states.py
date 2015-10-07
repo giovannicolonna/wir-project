@@ -27,7 +27,7 @@ htmls = sorted(os.listdir(directory))
 
 beers = []
 old = "1"
-old_s = "al"
+old_s = "ak"
 beer = OrderedDict()  # trasfrmandoli in OrderedDict si mantiene l'ordine di inserimento
 reviews = []
 
