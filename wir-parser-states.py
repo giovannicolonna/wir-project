@@ -5,17 +5,6 @@ import json
 from bs4 import BeautifulSoup
 from collections import OrderedDict
 
-states = {}
-st = open("states.tsv", "r")
-for line in st:
-    line = line.split("\t")
-    states[line[1]] = line[0]
-st.close()
-
-LOGFILE = "parser-log-states.txt"
-log = open(LOGFILE, "w")
-
-
 def sistemaTesto(text):
     try:
         descr = text
@@ -23,12 +12,10 @@ def sistemaTesto(text):
         if descr[1] == '.':
             if descr[3].isdigit():
                 return descr[4:]
-
             else:
                 return descr[3:]
         else:
             return descr[1:]
-
     except:
         log.write("WARNING: a description does not respect standards, could contain invalid characters\n")
         return text
@@ -58,7 +45,7 @@ for html in htmls:
         reviews = []
         if s != old_s:
             log.write("Building JSON dataset...\n")
-            output = open("top250.json", 'w')
+            output = open("top-states-"+s+".json", 'w')
             output.write(json.dumps(beers, indent=4))
             output.close()
             log.write("JSON dataset has been successfully built.\n")
