@@ -1,4 +1,4 @@
 *.html
-top250/*.html
-top-us/*.html
-top-states/*.html
+top250/
+top-us/
+top-states/
