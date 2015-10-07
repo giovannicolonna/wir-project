@@ -15,40 +15,44 @@ Esempio di JSON:
 
 ```json
 
-[	//list of beers
-	{	//this is a beer
-		position:
-		name:
-		brewer:
-		ba_score:
-		num_rev:
-		hads:
-		avg:
-		pDev:
-		state:
-		style:
-		abv:
-		reviews: [
+[	
+	{	
+		"position" : "1",
+		"name" : "Heineken",
+		"brewer" : "Heineken",
+		"ba_score" : "90",
+		"num_rev" : "100",
+		"hads" : "20",
+		"avg" : "4.9",
+		"pDev" : "+0.3",
+		"state" : "Netherlands",
+		"style" : "Lager",
+		"abv" : "4.7",
+		"reviews": [
 			{
-				rate:
-				rDev:
-				look:
-				smell:
-				taste:
-				feel:
-				overall:
-				text: (optional)
-				reviewer:
+				"rate" : "5",
+				"rDev" : "5",
+				"look" : "5",
+				"smell" : "5",
+				"taste" : "5",
+				"feel" : "5",
+				"overall" : "5",
+				"text" : "Sounds good.",
+				reviewer: "me"
 			},
 			{
-				...
-			},
-			...
+				"rate" : "1",
+				"rDev" : "1",
+				"look" : "1",
+				"smell" : "1",
+				"taste" : "1",
+				"feel" : "1",
+				"overall" : "1",
+				"text" : "Sounds bad.",
+				reviewer: "not me"
+			}
 		]
-	},
-	{
-		...
-	},
-	...
+	}
+
 ]
 ```
