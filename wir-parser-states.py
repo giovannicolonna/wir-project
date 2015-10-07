@@ -2,6 +2,7 @@ __author__ = 'Federica'
 
 import os
 import json
+import requests
 from bs4 import BeautifulSoup
 from collections import OrderedDict
 
@@ -126,10 +127,13 @@ for html in htmls:
                         ##code for extracting link of reviewer (tested)
 
                         ##reviewerPage = user.get('href')
-                        ##reviewerProfileLink = 'http://www.beeradvocate.com'+reviewerPage+'trophies'
+                        ##reviewerProfileLink = 'http://www.beeradvocate.com'+reviewerPage+'?card=1'
+                        ##html = requests.get(reviewerProfileLink).text
+                        ##soup = BeautifulSoup(html,'lxml')
+                        ##for points in soup.findAll('a','concealed OverlayTrigger'):
+                        ##    reviewerScore = points.get_text()
 
-                        ##  WARNING!: users points (the rating of the reviewer) are not always available, since each user
-                        ##  can hide his profile page
+
             i += 1
 
         review = OrderedDict()  # trasfrmandoli in OrderedDict si mantiene l'ordine di inserimento
@@ -142,7 +146,7 @@ for html in htmls:
         review['overall'] = overall
         #review['text'] = text
         review['reviewer'] = reviewer
-
+        #review['reviewerScore'] = reviewerScore
         reviews.append(review)
         log.write("\tReviews of this file have been successfully read.\n")
 
