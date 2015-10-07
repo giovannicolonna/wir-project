@@ -11,10 +11,12 @@ Direi di utilizzare http://www.beeradvocate.com/ e lavorare in questo modo:
 .) Effettuare clustering di tutto il dataset.
 .) Effettuare ranking, prendendo in input la lista di attributi da considerare.
 .) Data una birra in input e la lista di attributi da considerare, produrre in output le Top-10 e Bottom-10 birre più simili alla birra in input, considerando solo gli attributi inseriti.
+Esempio di JSON:
 
-Beers.json:
-[
-	{
+```json
+
+[	//list of beers
+	{	//this is a beer
 		position:
 		name:
 		brewer:
@@ -35,15 +37,18 @@ Beers.json:
 				taste:
 				feel:
 				overall:
-				text:
+				text: (optional)
 				reviewer:
 			},
 			{
 				...
-			}
+			},
+			...
 		]
 	},
 	{
 		...
-	}
+	},
+	...
 ]
+```
