@@ -43,6 +43,8 @@ beer = OrderedDict()  # trasfrmandoli in OrderedDict si mantiene l'ordine di ins
 reviews = []
 
 for html in htmls:
+    if html[0] == '.':
+        continue
     print html
     log.write("Reading html file: "+str(html)+"\n")
     s = html.split("-")[0]
