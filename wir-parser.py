@@ -37,6 +37,8 @@ reviews = []
 
 for html in htmls:
     print html
+    if html[0] == ".":
+        continue
     log.write("Reading html file: "+str(html)+"\n")
     b = html.split("-")[0]
     r = html.split("-")[1]
