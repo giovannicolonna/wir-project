@@ -1,4 +1,6 @@
 *.html
+*.txt
+*.json
 top250/
 top-us/
 top-states/
