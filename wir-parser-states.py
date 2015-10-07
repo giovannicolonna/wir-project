@@ -123,6 +123,13 @@ for html in htmls:
                 if muted.findAll('a', 'username') is not None:
                     for user in muted.findAll('a', 'username'):
                         reviewer = user.get_text()
+                        ##code for extracting link of reviewer (tested)
+
+                        ##reviewerPage = user.get('href')
+                        ##reviewerProfileLink = 'http://www.beeradvocate.com'+reviewerPage+'trophies'
+
+                        ##  WARNING!: users points (the rating of the reviewer) are not always available, since each user
+                        ##  can hide his profile page
             i += 1
 
         review = OrderedDict()  # trasfrmandoli in OrderedDict si mantiene l'ordine di inserimento
