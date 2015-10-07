@@ -8,6 +8,7 @@ from collections import OrderedDict
 LOGFILE = "parser-log.txt"
 log = open(LOGFILE,"w")
 
+
 def sistemaTesto(text):
     try:
         descr = text
@@ -93,8 +94,8 @@ for html in htmls:
             except Exception:
                 rDev = block.find('span', 'rAvg_norm').get_text().strip()
 
-        text = block.get_text()
-        text = sistemaTesto(text)
+        #text = block.get_text()
+        #text = sistemaTesto(text)
         i = 1
         for muted in block.find_all('span', 'muted'):
             if i == 1:
@@ -126,7 +127,7 @@ for html in htmls:
         review['taste'] = taste
         review['feel'] = feel
         review['overall'] = overall
-        review['text'] = text
+        #review['text'] = text
         review['reviewer'] = reviewer
 
         reviews.append(review)
@@ -135,7 +136,7 @@ for html in htmls:
     old = b
 log.write("Building JSON dataset...\n")
 output = open("top250.json", 'w')
-output.write(json.dumps(beers))
+output.write(json.dumps(beers, indent=4))
 output.close()
 log.write("JSON dataset has been successfully built.\n")
 log.close()
