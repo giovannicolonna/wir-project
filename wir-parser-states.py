@@ -47,7 +47,7 @@ for html in htmls:
         reviews = []
         if s != old_s:
             log.write("Building JSON dataset...\n")
-            output = open("top-states-"+s+".json", 'w')
+            output = open("top-states-"+old_s+".json", 'w')
             output.write(json.dumps(beers, indent=4))
             output.close()
             log.write("JSON dataset has been successfully built.\n")
