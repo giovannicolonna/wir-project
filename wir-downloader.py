@@ -4,6 +4,7 @@ import re
 import time
 import shutil
 import os
+import time
 
 LOGFILE = "top250-log.txt"
 log = open(LOGFILE, "w")
@@ -11,6 +12,8 @@ directory = "top250/"
 parser = "lxml"
 baseUrl = "http://www.beeradvocate.com"
 url = baseUrl + "/lists/top/"
+
+t0 = time.clock()
 
 if os.path.exists(directory):
     shutil.rmtree(directory)
@@ -95,5 +98,7 @@ for link in links:
         output.write(str(soup))
         output.close()
         offset += 25
-
+t1 = time.clock()
+log.write("Download completed in "+str(t1-t0)+" sec\n")
 log.close()
+

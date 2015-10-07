@@ -13,6 +13,8 @@ baseUrl = "http://www.beeradvocate.com"
 url = baseUrl + "/lists/us/"
 directory = "top-us/"
 
+t0 = time.clock()
+
 if os.path.exists(directory):
     shutil.rmtree(directory)
 os.mkdir(directory)
@@ -96,6 +98,7 @@ for link in links:
         output.write(str(soup))
         output.close()
         offset += 25
-
+t1 = time.clock()
+log.write("Download completed in "+str(t1-t0)+" sec\n")
 
 log.close()
