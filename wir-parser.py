@@ -134,6 +134,7 @@ for html in htmls:
         log.write("\tReviews of this file have been successfully read.\n")
 
     old = b
+
 log.write("Building JSON dataset...\n")
 output = open("top250.json", 'w')
 output.write(json.dumps(beers, indent=4))
