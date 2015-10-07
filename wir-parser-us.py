@@ -5,8 +5,8 @@ import json
 from bs4 import BeautifulSoup
 from collections import OrderedDict
 
-LOGFILE = "parser-log.txt"
-log = open(LOGFILE,"w")
+LOGFILE = "parser-log-us.txt"
+log = open(LOGFILE, "w")
 
 
 def sistemaTesto(text):
@@ -26,7 +26,7 @@ def sistemaTesto(text):
         log.write("WARNING: a description does not respect standards, could contain invalid characters\n")
         return text
 
-directory = "top250/"
+directory = "top-us/"
 htmls = sorted(os.listdir(directory))
 
 
@@ -137,7 +137,7 @@ for html in htmls:
     old = b
 
 log.write("Building JSON dataset...\n")
-output = open("top250.json", 'w')
+output = open("top-us.json", 'w')
 output.write(json.dumps(beers, indent=4))
 output.close()
 log.write("JSON dataset has been successfully built.\n")
