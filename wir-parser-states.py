@@ -51,6 +51,7 @@ for html in htmls:
             output.write(json.dumps(beers, indent=4))
             output.close()
             log.write("JSON dataset has been successfully built.\n")
+            beers = []
 
     soup = BeautifulSoup(open(directory+html), "lxml")
 
