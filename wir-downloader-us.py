@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 import re
 import time
+import os
+import shutil
 
 LOGFILE = "top-us-log.txt"
 log = open(LOGFILE, "w")
@@ -9,6 +11,11 @@ log = open(LOGFILE, "w")
 parser = "lxml"
 baseUrl = "http://www.beeradvocate.com"
 url = baseUrl + "/lists/us/"
+directory = "top-us/"
+
+if os.path.exists(directory):
+    shutil.rmtree(directory)
+os.mkdir(directory)
 
 log.write("Requesting page: " + url + "\n")
 
@@ -65,7 +72,7 @@ for link in links:
 
     log.write("\tNumber of reviews: " + str(rev) + "\n")
     log.write("\tReviews downloaded: " + str(offset) + "\n\t\t" + str(url) + "\n")
-    output = open("top-us/" + str(count) + "-" + str(offset) + ".html", "w")
+    output = open(directory + str(count) + "-" + str(offset) + ".html", "w")
     output.write(str(soup))
     output.close()
 
@@ -85,18 +92,10 @@ for link in links:
                 log.write("ERR: Connection error in reviews download page, retrying...\n")
         soup = BeautifulSoup(html, parser)
         log.write("\tReviews downloaded: " + str(offset) + "\n\t\t" + str(url) + "\n")
-        output = open("top-us/" + str(count) + "-" + str(offset) + ".html", "w")
+        output = open(directory + str(count) + "-" + str(offset) + ".html", "w")
         output.write(str(soup))
         output.close()
         offset += 25
-
-
-
-
-##
-##    TODO: building dataset from HTML files for top-250
-##
-
 
 
 log.close()

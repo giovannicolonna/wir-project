@@ -5,7 +5,14 @@ import json
 from bs4 import BeautifulSoup
 from collections import OrderedDict
 
-LOGFILE = "parser-log.txt"
+states = {}
+st = open("states.tsv", "r")
+for line in st:
+    line = line.split("\t")
+    states[line[1]] = line[0]
+st.close()
+
+LOGFILE = "parser-log-states.txt"
 log = open(LOGFILE, "w")
 
 
@@ -26,27 +33,33 @@ def sistemaTesto(text):
         log.write("WARNING: a description does not respect standards, could contain invalid characters\n")
         return text
 
-directory = "top250/"
+directory = "top-states/"
 htmls = sorted(os.listdir(directory))
-
 
 beers = []
 old = "1"
+old_s = "al"
 beer = OrderedDict()  # trasfrmandoli in OrderedDict si mantiene l'ordine di inserimento
 reviews = []
 
 for html in htmls:
     print html
     log.write("Reading html file: "+str(html)+"\n")
-    b = html.split("-")[0]
-    r = html.split("-")[1]
+    s = html.split("-")[0]
+    b = html.split("-")[1]
+    r = html.split("-")[2]
 
     if b != old:
-
         beer['reviews'] = reviews
         beers.append(beer)
         beer = OrderedDict()  # trasfrmandoli in OrderedDict si mantiene l'ordine di inserimento
         reviews = []
+        if s != old_s:
+            log.write("Building JSON dataset...\n")
+            output = open("top250.json", 'w')
+            output.write(json.dumps(beers, indent=4))
+            output.close()
+            log.write("JSON dataset has been successfully built.\n")
 
     soup = BeautifulSoup(open(directory+html), "lxml")
 
@@ -135,11 +148,7 @@ for html in htmls:
         log.write("\tReviews of this file have been successfully read.\n")
 
     old = b
+    old_s = s
 
-log.write("Building JSON dataset...\n")
-output = open("top250.json", 'w')
-output.write(json.dumps(beers, indent=4))
-output.close()
-log.write("JSON dataset has been successfully built.\n")
 log.close()
 
