@@ -6,7 +6,8 @@ import requests
 from bs4 import BeautifulSoup
 from collections import OrderedDict
 
-log = open("parser-log-states.txt","w")
+log = open("parser-log-states.txt", 'w')
+
 
 def sistemaTesto(text):
     try:

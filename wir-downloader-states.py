@@ -17,7 +17,7 @@ LOGFILE = "top-states-log.txt"
 log = open(LOGFILE, "w")
 directory = "top-states/"
 
-t0 = time.clock()
+t0 = time.time()
 
 if os.path.exists(directory):
     shutil.rmtree(directory)
@@ -113,7 +113,7 @@ for state in states:
             offset += 25
 
     count = 0
-t1 = time.clock()
+t1 = time.time()
 log.write("Download completed in "+str(t1-t0)+" sec\n")
 
 log.close()
