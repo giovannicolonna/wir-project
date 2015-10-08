@@ -3,6 +3,7 @@ __author__ = 'Federica'
 import os
 import json
 import requests
+import time
 from bs4 import BeautifulSoup
 from collections import OrderedDict
 
@@ -121,15 +122,24 @@ for html in htmls:
                 if muted.findAll('a', 'username') is not None:
                     for user in muted.findAll('a', 'username'):
                         reviewer = user.get_text()
-                        ##code for extracting link of reviewer (tested)
+                         ##code for extracting link and points of reviewer (tested)
 
-                        ##reviewerPage = user.get('href')
-                        ##reviewerProfileLink = 'http://www.beeradvocate.com'+reviewerPage+'?card=1'
-                        ##html = requests.get(reviewerProfileLink).text
-                        ##soup = BeautifulSoup(html,'lxml')
-                        ##for points in soup.findAll('a','concealed OverlayTrigger'):
-                        ##    reviewerScore = points.get_text()
-                        ##    print reviewerScore
+                        reviewerPage = user.get('href')
+                        reviewerProfileLink = 'http://www.beeradvocate.com'+reviewerPage+'?card=1'
+                        # Connection: try-except
+                        netControl = True
+                        while netControl:
+                            try:
+                                html = requests.get(reviewerProfileLink).text
+                                netControl = False
+                            except requests.RequestException:
+                                time.sleep(4)
+                                print "ERR: Connection error in reviewer point page, retrying..."
+                                log.write("ERR: Connection error in reviewer point page, retrying...\n")
+
+                        soup = BeautifulSoup(html,'lxml')
+                        for points in soup.findAll('a','concealed OverlayTrigger'):
+                            reviewerScore = points.get_text()
 
 
 
@@ -145,7 +155,7 @@ for html in htmls:
         review['overall'] = overall
         #review['text'] = text
         review['reviewer'] = reviewer
-        #review['reviewerScore'] = reviewerScore
+        review['reviewerScore'] = reviewerScore
 
         reviews.append(review)
         log.write("\tReviews of this file have been successfully read.\n")

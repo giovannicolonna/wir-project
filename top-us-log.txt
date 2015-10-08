@@ -155,7 +155,7 @@ Beer number: 13
 	Reviews downloaded: 75
 		http://www.beeradvocate.com/beer/profile/25888/87246/?sort=topr&start=75
 Beer number: 14
-	Number of reviews: 2784
+	Number of reviews: 2785
 	Reviews downloaded: 0
 		http://www.beeradvocate.com/beer/profile/1199/19960/?sort=topr&start=0
 	Reviews downloaded: 25
@@ -235,7 +235,7 @@ Beer number: 20
 	Reviews downloaded: 100
 		http://www.beeradvocate.com/beer/profile/23222/113674/?sort=topr&start=100
 Beer number: 21
-	Number of reviews: 1358
+	Number of reviews: 1359
 	Reviews downloaded: 0
 		http://www.beeradvocate.com/beer/profile/26/64228/?sort=topr&start=0
 	Reviews downloaded: 25
@@ -431,12 +431,6 @@ Beer number: 38
 	Reviews downloaded: 100
 		http://www.beeradvocate.com/beer/profile/1146/100421/?sort=topr&start=100
 Beer number: 39
-	Number of reviews: 49
-	Reviews downloaded: 0
-		http://www.beeradvocate.com/beer/profile/28743/189696/?sort=topr&start=0
-	Reviews downloaded: 25
-		http://www.beeradvocate.com/beer/profile/28743/189696/?sort=topr&start=25
-Beer number: 40
 	Number of reviews: 92
 	Reviews downloaded: 0
 		http://www.beeradvocate.com/beer/profile/28743/88969/?sort=topr&start=0
@@ -446,7 +440,7 @@ Beer number: 40
 		http://www.beeradvocate.com/beer/profile/28743/88969/?sort=topr&start=50
 	Reviews downloaded: 75
 		http://www.beeradvocate.com/beer/profile/28743/88969/?sort=topr&start=75
-Beer number: 41
+Beer number: 40
 	Number of reviews: 383
 	Reviews downloaded: 0
 		http://www.beeradvocate.com/beer/profile/2097/34313/?sort=topr&start=0
@@ -458,7 +452,7 @@ Beer number: 41
 		http://www.beeradvocate.com/beer/profile/2097/34313/?sort=topr&start=75
 	Reviews downloaded: 100
 		http://www.beeradvocate.com/beer/profile/2097/34313/?sort=topr&start=100
-Beer number: 42
+Beer number: 41
 	Number of reviews: 180
 	Reviews downloaded: 0
 		http://www.beeradvocate.com/beer/profile/26/30184/?sort=topr&start=0
@@ -470,7 +464,7 @@ Beer number: 42
 		http://www.beeradvocate.com/beer/profile/26/30184/?sort=topr&start=75
 	Reviews downloaded: 100
 		http://www.beeradvocate.com/beer/profile/26/30184/?sort=topr&start=100
-Beer number: 43
+Beer number: 42
 	Number of reviews: 578
 	Reviews downloaded: 0
 		http://www.beeradvocate.com/beer/profile/30356/94350/?sort=topr&start=0
@@ -482,6 +476,12 @@ Beer number: 43
 		http://www.beeradvocate.com/beer/profile/30356/94350/?sort=topr&start=75
 	Reviews downloaded: 100
 		http://www.beeradvocate.com/beer/profile/30356/94350/?sort=topr&start=100
+Beer number: 43
+	Number of reviews: 50
+	Reviews downloaded: 0
+		http://www.beeradvocate.com/beer/profile/28743/189696/?sort=topr&start=0
+	Reviews downloaded: 25
+		http://www.beeradvocate.com/beer/profile/28743/189696/?sort=topr&start=25
 Beer number: 44
 	Number of reviews: 372
 	Reviews downloaded: 0
@@ -571,7 +571,7 @@ Beer number: 51
 	Reviews downloaded: 100
 		http://www.beeradvocate.com/beer/profile/16866/51257/?sort=topr&start=100
 Beer number: 52
-	Number of reviews: 327
+	Number of reviews: 328
 	Reviews downloaded: 0
 		http://www.beeradvocate.com/beer/profile/22511/61062/?sort=topr&start=0
 	Reviews downloaded: 25
@@ -625,7 +625,7 @@ Beer number: 56
 	Reviews downloaded: 75
 		http://www.beeradvocate.com/beer/profile/24300/104699/?sort=topr&start=75
 Beer number: 57
-	Number of reviews: 140
+	Number of reviews: 141
 	Reviews downloaded: 0
 		http://www.beeradvocate.com/beer/profile/22511/86487/?sort=topr&start=0
 	Reviews downloaded: 25
@@ -1070,3 +1070,4 @@ Beer number: 100
 		http://www.beeradvocate.com/beer/profile/173/47546/?sort=topr&start=75
 	Reviews downloaded: 100
 		http://www.beeradvocate.com/beer/profile/173/47546/?sort=topr&start=100
+Download completed in 26.812005 sec
