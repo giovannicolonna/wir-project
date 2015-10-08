@@ -1,5 +1,7 @@
 __author__ = 'Federica'
 
+##Parses the html files downloaded from the top-250 beers of BeerAdvocate, and builds the JSON array of these beers
+
 import os
 import json
 import requests
@@ -28,7 +30,7 @@ def sistemaTesto(text):
         log.write("WARNING: a description does not respect standards, could contain invalid characters\n")
         return text
 
-directory = "htmltest/"
+directory = "top250/"
 htmls = sorted(os.listdir(directory))
 
 

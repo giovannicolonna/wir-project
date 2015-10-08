@@ -1,5 +1,10 @@
 __author__ = 'Federica'
 
+
+##Parses the html files downloaded from the US top 100 beers, and builds the JSON array of these beers
+
+
+
 import os
 import json
 import requests

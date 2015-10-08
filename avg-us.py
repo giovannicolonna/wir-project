@@ -11,9 +11,11 @@ input_json.close()
 # lista di birre. Ogni birra e' un dict con i vari campi, tra cui review che e' una lista
 beers = json.loads(beers_json)
 
-beers_dict = {}
+beers_dict = {} #not used
+output_file = open("top-us-vectorialized.tsv",'w')
 for beer in beers:
     tot_rev = len(beer['reviews'])
+    beer_name = str(beer['name'].encode('utf-8'))
     avg_look = 0
     avg_smell = 0
     avg_taste = 0
@@ -57,17 +59,21 @@ for beer in beers:
     w_avg_feel /= tot_weight
     w_avg_overall /= tot_weight
 
-    # print avg_feel
-    # print avg_look
-    # print avg_overall
-    # print avg_smell
-    # print avg_taste
+    output_file.write(beer_name+'\t')
 
-    # print
+    output_file.write(str(avg_look)+'\t')
+    output_file.write(str(avg_smell)+'\t')
+    output_file.write(str(avg_taste)+'\t')
+    output_file.write(str(avg_feel)+'\t')
+    output_file.write(str(avg_overall)+'\t')
 
-    # print w_avg_feel
-    # print w_avg_look
-    # print w_avg_overall
-    # print w_avg_smell
-    # print w_avg_taste
-    break
+    # print on file weighted characteristics
+
+
+    output_file.write(str(w_avg_look)+'\t')
+    output_file.write(str(w_avg_smell)+'\t')
+    output_file.write(str(w_avg_taste)+'\t')
+    output_file.write(str(w_avg_feel)+'\t')
+    output_file.write(str(w_avg_overall)+'\r')
+
+output_file.close()
