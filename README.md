@@ -38,7 +38,7 @@ Esempio di JSON:
 				"feel" : "5",
 				"overall" : "5",
 				"text" : "Sounds good.",
-				reviewer: "me"
+				"reviewer" : "me"
 			},
 			{
 				"rate" : "1",
@@ -49,7 +49,7 @@ Esempio di JSON:
 				"feel" : "1",
 				"overall" : "1",
 				"text" : "Sounds bad.",
-				reviewer: "not me"
+				"reviewer": "not me"
 			}
 		]
 	}
