@@ -274,7 +274,6 @@ Beer number: 24
 	Number of reviews: 47
 	Reviews downloaded: 0
 		http://www.beeradvocate.com/beer/profile/17980/120372/?sort=topr&start=0
-ERR: Connection error in reviews download page, retrying...
 	Reviews downloaded: 25
 		http://www.beeradvocate.com/beer/profile/17980/120372/?sort=topr&start=25
 Beer number: 25
@@ -2567,4 +2566,4 @@ Beer number: 250
 		http://www.beeradvocate.com/beer/profile/22511/96955/?sort=topr&start=0
 	Reviews downloaded: 25
 		http://www.beeradvocate.com/beer/profile/22511/96955/?sort=topr&start=25
-Download completed in 60.192445 sec
+Download completed in 679.603654861 sec
