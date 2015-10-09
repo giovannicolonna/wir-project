@@ -3,8 +3,10 @@ __author__ = 'Federica'
 import json
 import re
 
+INPUTFILE = "top-us" #si puo' scegliere tra top-us e top250
 
-input_json = open("top-us.json", 'r')
+
+input_json = open(INPUTFILE+".json", 'r')
 beers_json = input_json.read()
 input_json.close()
 
@@ -12,7 +14,8 @@ input_json.close()
 beers = json.loads(beers_json)
 
 beers_dict = {} #not used
-output_file = open("top-us-vectorialized.tsv",'w')
+output_file = open(INPUTFILE+"-vectorialized.tsv",'w')
+
 for beer in beers:
     tot_rev = len(beer['reviews'])
     beer_name = str(beer['name'].encode('utf-8'))
@@ -74,6 +77,7 @@ for beer in beers:
     output_file.write(str(w_avg_smell)+'\t')
     output_file.write(str(w_avg_taste)+'\t')
     output_file.write(str(w_avg_feel)+'\t')
-    output_file.write(str(w_avg_overall)+'\r')
+    output_file.write(str(w_avg_overall)+'\n')
+
 
 output_file.close()
