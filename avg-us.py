@@ -81,3 +81,4 @@ for beer in beers:
 
 
 output_file.close()
+

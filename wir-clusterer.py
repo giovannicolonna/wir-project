@@ -25,7 +25,7 @@ INPUTFILE = "top-us" #si puo' scegliere tra "top-us" o "top250"
 
 f = open(INPUTFILE+"-vectorialized.tsv",'r')
 x = []
-true_labels = [] # non mi e' chiaro lo scopo, dev'essere composto da numeri che vanno da 2 a num.birre-1 per dare
+true_labels = []  # non mi e' chiaro lo scopo, dev'essere composto da numeri che vanno da 2 a num.birre-1 per dare
 # un iniziale labeling dei punti, viene assegnato a ogni punto un'etichetta compresa tra 0 e 7
 i = 0
 for line in csv.reader(f,delimiter='\t'):
@@ -34,19 +34,19 @@ for line in csv.reader(f,delimiter='\t'):
     for elem in line:
         if first:
             first = False
-            continue #ignoriamo il nome della birra e prendiamo solo le medie
+            continue  # ignoriamo il nome della birra e prendiamo solo le medie
         currentVector.append(elem)
     x.append(currentVector)
     true_labels.append(i)
     i += 1
-    if i>7: #etichettiamo inizialmente ogni birra con un numero da 0 a 7
+    if i > 7:  # etichettiamo inizialmente ogni birra con un numero da 0 a 7
         i = 0
 f.close()
 
-X = np.array(x) #convertiamo la matrice X e l'array true_labels nel formato numpy.array richiesto per DBScan
+X = np.array(x)  # convertiamo la matrice X e l'array true_labels nel formato numpy.array richiesto per DBScan
 true_labels = np.array(true_labels)
 print "Beer matrix:\n"
-print X #stampa matrice delle birre
+print X  # stampa matrice delle birre
 print '\n\n'
 
 
@@ -96,7 +96,7 @@ print("V-measure: %0.3f" % metrics.v_measure_score(true_labels, labels))
 print("Adjusted Rand Index: %0.3f" % metrics.adjusted_rand_score(true_labels, labels))
 print("Adjusted Mutual Information: %0.3f" % metrics.adjusted_mutual_info_score(true_labels, labels))
 try:
-    ##Attenzione, se non ci sono core-samples, quindi non ci sono clusters, qua lancia un'eccezione
+    ## Attenzione, se non ci sono core-samples, quindi non ci sono clusters, qua lancia un'eccezione
     print("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, labels))
 except:
     print("\nWARNING: DBScan has not found any clustering. Re-tune the parameters.\n")
@@ -127,3 +127,4 @@ for k, col in zip(unique_labels, colors):
 
 plt.title('Estimated number of clusters: %d' % n_clusters_)
 plt.show()
+

@@ -1,6 +1,5 @@
 __author__ = 'Federica'
 
-
 ##Parses the html files downloaded from the US top 100 beers, and builds the JSON array of these beers
 
 
@@ -41,7 +40,7 @@ beers = []
 old = "1"
 beer = OrderedDict()  # trasfrmandoli in OrderedDict si mantiene l'ordine di inserimento
 reviews = []
-
+index = 0
 for html in htmls:
     print html
     if html[0] == ".":
@@ -51,7 +50,8 @@ for html in htmls:
     r = html.split("-")[1]
 
     if b != old:
-
+        print index
+        index += 1
         beer['reviews'] = reviews
         beers.append(beer)
         beer = OrderedDict()  # trasfrmandoli in OrderedDict si mantiene l'ordine di inserimento
@@ -164,6 +164,7 @@ for html in htmls:
 
     old = b
 
+beers.append(beer)
 log.write("Building JSON dataset...\n")
 output = open("top-us.json", 'w')
 output.write(json.dumps(beers, indent=4))

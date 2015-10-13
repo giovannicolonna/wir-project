@@ -21,14 +21,23 @@ fields["w_taste"] = 8
 fields["w_feel"] = 9
 fields["w_overall"] = 10
 
+reference = ['us', 'top250']
+with open('states.tsv') as states:
+    for line in states:
+        reference.append(line.split('\t')[0])
+
 argv = sys.argv[1:len(sys.argv)]
 argv = [arg.lower() for arg in argv if arg in fields]
+
+ref = 'top250'
+if argv[1] in reference:
+    ref = argv[1]
 
 log.write("Considered features: "+str(argv)+"\n")
 log.write("Ranking beers according to features...\n")
 beers = []
 
-with open("top-us-vectorialized.tsv", "r") as input_file:
+with open("top-"+ref+"-vectorialized.tsv", "r") as input_file:
     for line in input_file:
         splitted_line = line.split("\t")
         beer = {}
@@ -39,19 +48,21 @@ with open("top-us-vectorialized.tsv", "r") as input_file:
         beer["norm"] = math.sqrt(norm)
         beers.append(beer)
 
-#print beers
-beers = sorted(beers, key=lambda entry:entry["norm"], reverse=True)
+# print beers
+beers = sorted(beers, key=lambda entry: entry["norm"], reverse=True)
+print("RANKED BEERS ACCORDING TO: "+str(argv))
+pp.pprint(beers)
 
-top10 = beers[0:10]
-bottom10 = beers[len(beers)-10:len(beers)]
-bottom10 = sorted(bottom10, key=lambda entry:entry["norm"])
+# top10 = beers[0:10]
+# bottom10 = beers[len(beers)-10:len(beers)]
+# bottom10 = sorted(bottom10, key=lambda entry:entry["norm"])
 
-log.write("\nTop 10 beers according features:\n")
-for b in top10:
-    log.write(str(b)+"\n")
+# log.write("\nTop 10 beers according features:\n")
+# for b in top10:
+#     log.write(str(b)+"\n")
 
-log.write("\nBottom 10 beers according features:\n")
-for b in bottom10:
-    log.write(str(b)+"\n")
+# log.write("\nBottom 10 beers according features:\n")
+# for b in bottom10:
+#     log.write(str(b)+"\n")
 
 log.close()
