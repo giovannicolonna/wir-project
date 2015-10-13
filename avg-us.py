@@ -3,7 +3,7 @@ __author__ = 'Federica'
 import json
 import re
 
-INPUTFILE = "top-us" #si puo' scegliere tra top-us e top250
+INPUTFILE = "top-us"  # si puo' scegliere tra top-us e top250
 
 
 input_json = open(INPUTFILE+".json", 'r')
@@ -13,8 +13,7 @@ input_json.close()
 # lista di birre. Ogni birra e' un dict con i vari campi, tra cui review che e' una lista
 beers = json.loads(beers_json)
 
-beers_dict = {} #not used
-output_file = open(INPUTFILE+"-vectorialized.tsv",'w')
+output_file = open(INPUTFILE+"-vectorialized.tsv", 'w')
 
 for beer in beers:
     tot_rev = len(beer['reviews'])

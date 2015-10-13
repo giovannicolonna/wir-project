@@ -4,7 +4,7 @@ import sys
 import math
 import pprint as pp
 
-LOGFILE = "top-us-ranking-log.txt"
+LOGFILE = "ranking-log.txt"
 log = open(LOGFILE, "w")
 
 # [name, look, smell, taste, feel, overall, w_look, w_smell, w_taste, w_feel, w_overall]
@@ -25,7 +25,7 @@ reference = ['us']
 with open('states.tsv') as states:
     for line in states:
         reference.append(line.split('\t')[0])
-print reference
+
 argv = sys.argv[1:len(sys.argv)]
 
 ref = 'top250'
@@ -56,6 +56,11 @@ with open(ref+"-vectorialized.tsv", "r") as input_file:
 # print beers
 beers = sorted(beers, key=lambda entry: entry["norm"], reverse=True)
 print("RANKED BEERS ACCORDING TO: "+str(argv))
+
+log.write("\nRanking according to features:\n")
+for b in beers:
+    log.write(str(b)+"\n")
+
 pp.pprint(beers)
 
 # top10 = beers[0:10]
