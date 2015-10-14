@@ -3,7 +3,8 @@ __author__ = 'Federica'
 import json
 import re
 
-INPUTFILE = "top250"  # si puo' scegliere tra top-us e top250
+# INPUTFILE = "top250"  # si puo' scegliere tra top-us e top250
+INPUTFILE = "top-us"
 
 
 input_json = open(INPUTFILE+".json", 'r')
