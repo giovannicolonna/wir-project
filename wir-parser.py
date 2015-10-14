@@ -164,6 +164,8 @@ for html in htmls:
 
     old = b
 
+beer['reviews'] = reviews
+beers.append(beer)
 log.write("Building JSON dataset...\n")
 output = open("top250.json", 'w')
 output.write(json.dumps(beers, indent=4))

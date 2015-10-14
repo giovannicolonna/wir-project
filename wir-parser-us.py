@@ -50,12 +50,12 @@ for html in htmls:
     r = html.split("-")[1]
 
     if b != old:
-        print index
-        index += 1
         beer['reviews'] = reviews
         beers.append(beer)
         beer = OrderedDict()  # trasfrmandoli in OrderedDict si mantiene l'ordine di inserimento
         reviews = []
+        print "Beer: ", index
+        index += 1
 
     soup = BeautifulSoup(open(directory+html), "lxml")
 
@@ -164,6 +164,7 @@ for html in htmls:
 
     old = b
 
+beer['reviews'] = reviews
 beers.append(beer)
 log.write("Building JSON dataset...\n")
 output = open("top-us.json", 'w')

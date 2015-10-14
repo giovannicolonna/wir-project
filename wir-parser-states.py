@@ -154,6 +154,7 @@ for html in htmls:
     old = b
     old_s = s
 
+beer['reviews'] = reviews
 beers.append(beer)
 output = open("top-states-"+old_s+".json", 'w')
 output.write(json.dumps(beers, indent=4))
