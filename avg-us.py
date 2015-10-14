@@ -3,7 +3,7 @@ __author__ = 'Federica'
 import json
 import re
 
-INPUTFILE = "top-us"  # si puo' scegliere tra top-us e top250
+INPUTFILE = "top250"  # si puo' scegliere tra top-us e top250
 
 
 input_json = open(INPUTFILE+".json", 'r')
@@ -57,11 +57,11 @@ for beer in beers:
         w_avg_feel += float(review['feel']) * weight
         w_avg_overall += float(review['overall']) * weight
 
-    avg_look /= tot_rev
-    avg_smell /= tot_rev
-    avg_taste /= tot_rev
-    avg_feel /= tot_rev
-    avg_overall /= tot_rev
+    #avg_look /= tot_rev
+    #avg_smell /= tot_rev
+    #avg_taste /= tot_rev
+    #avg_feel /= tot_rev
+    #avg_overall /= tot_rev
 
     w_avg_look /= tot_weight
     w_avg_smell /= tot_weight
@@ -71,11 +71,11 @@ for beer in beers:
 
     output_file.write(beer_name+'\t')
 
-    output_file.write(str(avg_look)+'\t')
-    output_file.write(str(avg_smell)+'\t')
-    output_file.write(str(avg_taste)+'\t')
-    output_file.write(str(avg_feel)+'\t')
-    output_file.write(str(avg_overall)+'\t')
+    #output_file.write(str(avg_look)+'\t')
+    #output_file.write(str(avg_smell)+'\t')
+    #output_file.write(str(avg_taste)+'\t')
+    #output_file.write(str(avg_feel)+'\t')
+    #output_file.write(str(avg_overall)+'\t')
 
     # print on file weighted characteristics
 

@@ -23,7 +23,6 @@ log = open(LOGFILE, "w")
 
 
 
-names = []
 
 ### STEP 1:
 ## Costruisce una matrice di float a partire da un file tsv <nomebirra><tab><arraydimedie> ottenuto dall'esecuzione di avg-us.py
@@ -32,31 +31,41 @@ names = []
 ##        true_labels, un array di interi della classe numpy.array che fungono da etichette iniziali del clustering
 ## NOTE: i nomi delle birre non vengono mantenuti nella matrice X
 
-INPUTFILE = "top-us" #si puo' scegliere tra "top-us" o "top250"
+INPUTFILE = "top250" #si puo' scegliere tra "top-us" o "top250"
+
+
+names = []
+positions = []
 log.write("Clustering on: "+INPUTFILE+'\n\n')
 f = open(INPUTFILE+"-vectorialized.tsv",'r')
 x = []
-true_labels = []  # non mi e' chiaro lo scopo, dev'essere composto da numeri che vanno da 2 a num.birre-1 per dare
-# un iniziale labeling dei punti, viene assegnato a ogni punto un'etichetta compresa tra 0 e 7
+initial_labels = []
 i = 0
 for line in csv.reader(f,delimiter='\t'):
-    currentVector = []
+    currentVector = [] #is needed for build X
     first = True
-    size = len(line)
+    counter = 0
     for elem in line:
+        if counter == len(line)-1:
+            #last iteraction, take the position
+            positions.append(elem)
+            continue
         if first:
             first = False
             names.append(elem)
+            counter += 1
             continue  # ignoriamo il nome della birra e prendiamo solo le medie
         currentVector.append(elem)
+        counter += 1
+
     x.append(currentVector)
-    true_labels.append(i)
+    initial_labels.append(i)
     i += 1
 
 f.close()
 
 X = np.array(x)  # convertiamo la matrice X e l'array true_labels nel formato numpy.array richiesto per DBScan
-true_labels = np.array(true_labels)
+initial_labels = np.array(initial_labels)
 
 log.write("Matrix of beers:\n\n")
 log.write(str(X))
@@ -65,7 +74,7 @@ print "Beer matrix:\n"
 print X  # stampa matrice delle birre
 print '\n\n'
 
-## RANDOM MATRIX
+## Y is RANDOM MATRIX, used for testing
 n_samples = 1500
 noise = 0.05
 Y, _ = make_swiss_roll(n_samples,noise)
@@ -74,12 +83,13 @@ Y[:, 1] *= .5
 
 ## AGGLOMERATIVE CLUSTERING
 
-print "AGGLOMERATIVE CLUSTERING"
+print "AGGLOMERATIVE CLUSTERING:\n"
+log.write("AGGLOMERATIVE CLUSTERING:\n")
 k = 7
 ward = AgglomerativeClustering(n_clusters=k, linkage='ward').fit(X)
 labelagg = ward.labels_
 
-print X
+
 
 #plotting....
 #fig = plt.figure()
@@ -96,13 +106,17 @@ print X
 
 clusters = defaultdict(set)
 j=0
+log.write("Clustering output:\n")
 for elem in labelagg:
-    clusters[elem].add(names[j])
+    tobeadded = (names[j],"ranked: "+positions[j])
+    clusters[elem].add(tobeadded)
     j+=1
 for elem in clusters:
-    print elem, sorted(clusters[elem])
+    result = "Cluster: " + str(elem) +" "+ str(sorted(clusters[elem]))
+    print result
+    log.write(result)
 
-## Step 2: DB SCAN clustering
+## DBSCAN CLUSTERING
 
 ## Esegue l'algoritmo di clustering DBScan. DBScan clusterizza in base alla densita' del dataset.
 ## Un gruppo di punti sufficientemente denso viene inserito in un cluster.
@@ -120,59 +134,87 @@ for elem in clusters:
 ## MIN_SAMPLES = numero minimo di punti vicini necessari per rendere un punto CORE-SAMPLE
 
 ## spero di essere stato chiaro :)
+log.write("\n\n\n")
+log.write("DBSCAN CLUSTERING:\n")
+print "\n\n\n"
+print "DBSCAN CLUSTERING:\n"
 
-#EPSILON = 0.116
-#MIN_SAMPLES = 6
-#log.write("Starting DBSCAN clustering, parameters:\n")
-#log.write("Epsilon: "+str(EPSILON)+'\n')
-#log.write("Min Samples: "+str(MIN_SAMPLES)+'\n\n')
-#db = DBSCAN(EPSILON,MIN_SAMPLES,metric='euclidean',p=None,random_state=None).fit(X)
-#labels = db.labels_
 
-#print "Initial labels:\n"
-#print true_labels
-#log.write("\nInitial labeling: \n")
-#log.write(str(true_labels))
-#log.write("\n")
-#print "\n"
-#print "Label set after DBScan:\n"
-#print labels
-#print "\n"
-#log.write("Labeling after DBScan: \n")
-#log.write(str(labels))
-#log.write("\n\n")
-#core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
-#core_samples_mask[db.core_sample_indices_] = True
-#labels = db.labels_
+
+EPSILON = 0.06
+MIN_SAMPLES = 6
+log.write("Starting DBSCAN clustering, parameters:\n")
+log.write("Epsilon: "+str(EPSILON)+'\n')
+log.write("Min Samples: "+str(MIN_SAMPLES)+'\n\n')
+db = DBSCAN(EPSILON,MIN_SAMPLES,metric='euclidean',p=None,random_state=None).fit(X)
+labels = db.labels_
+
+print "Initial labels:\n"
+print initial_labels
+log.write("\nInitial labeling: \n")
+log.write(str(initial_labels))
+log.write("\n")
+print "\n"
+print "Label set after DBScan:\n"
+print labels
+
+clusters = defaultdict(set)
+j=0
+log.write("Clustering output:\n")
+for elem in labels:
+    tobeadded = (names[j],"ranked: "+positions[j])
+    clusters[elem].add(tobeadded)
+    j+=1
+
+for elem in clusters:
+    if elem != -1:
+        result = "Cluster: " + str(elem) +" "+ str(sorted(clusters[elem]))
+        print result
+        log.write(result)
+    else:
+        result = "Noise:  "+ str(sorted(clusters[elem]))
+        print result
+        log.write(result)
+
+
+
+
+print "\n"
+log.write("Labeling after DBScan: \n")
+log.write(str(labels))
+log.write("\n\n")
+core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
+core_samples_mask[db.core_sample_indices_] = True
+labels = db.labels_
 
 # Number of clusters in labels, ignoring noise if present.
-#n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
 
 ## Statistiche strane:
-#print('Estimated number of clusters: %d' % n_clusters_)
-#log.write('Estimated number of clusters: %d' % n_clusters_+"\n")
+print('Estimated number of clusters: %d' % n_clusters_)
+log.write('Estimated number of clusters: %d' % n_clusters_+"\n")
 
-#print("Homogeneity: %0.3f" % metrics.homogeneity_score(true_labels,labels))
-#log.write("Homogeneity: %0.3f" % metrics.homogeneity_score(true_labels,labels)+'\n')
+print("Homogeneity: %0.3f" % metrics.homogeneity_score(initial_labels,labels))
+log.write("Homogeneity: %0.3f" % metrics.homogeneity_score(initial_labels,labels)+'\n')
 
-#print("Completeness: %0.3f" % metrics.completeness_score(true_labels, labels))
-#log.write("Completeness: %0.3f" % metrics.completeness_score(true_labels, labels)+'\n')
+print("Completeness: %0.3f" % metrics.completeness_score(initial_labels, labels))
+log.write("Completeness: %0.3f" % metrics.completeness_score(initial_labels, labels)+'\n')
 
-#print("V-measure: %0.3f" % metrics.v_measure_score(true_labels, labels))
-#log.write("V-measure: %0.3f" % metrics.v_measure_score(true_labels, labels)+'\n')
+print("V-measure: %0.3f" % metrics.v_measure_score(initial_labels, labels))
+log.write("V-measure: %0.3f" % metrics.v_measure_score(initial_labels, labels)+'\n')
 
-#print("Adjusted Rand Index: %0.3f" % metrics.adjusted_rand_score(true_labels, labels))
-#log.write("Adjusted Rand Index: %0.3f" % metrics.adjusted_rand_score(true_labels, labels)+'\n')
+print("Adjusted Rand Index: %0.3f" % metrics.adjusted_rand_score(initial_labels, labels))
+log.write("Adjusted Rand Index: %0.3f" % metrics.adjusted_rand_score(initial_labels, labels)+'\n')
 
-#print("Adjusted Mutual Information: %0.3f" % metrics.adjusted_mutual_info_score(true_labels, labels))
-#log.write("Adjusted Mutual Information: %0.3f" % metrics.adjusted_mutual_info_score(true_labels, labels)+'\n')
-#try:
+print("Adjusted Mutual Information: %0.3f" % metrics.adjusted_mutual_info_score(initial_labels, labels))
+log.write("Adjusted Mutual Information: %0.3f" % metrics.adjusted_mutual_info_score(initial_labels, labels)+'\n')
+try:
     ## Attenzione, se non ci sono core-samples, quindi non ci sono clusters, qua lancia un'eccezione
-    #print("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, labels))
-    #log.write("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, labels)+'\n')
-#except:
-    #print("\nWARNING: DBScan has not found any clustering. Re-tune the parameters.\n")
-    #log.write("\nWARNING: DBScan has not found any clustering. Re-tune the parameters.\n")
+    print("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, labels))
+    log.write("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, labels)+'\n')
+except:
+    print("\nWARNING: DBScan has not found any clustering. Re-tune the parameters.\n")
+    log.write("\nWARNING: DBScan has not found any clustering. Re-tune the parameters.\n")
 print("\n\n")
 
 ## Step 3: Plotting
@@ -200,4 +242,4 @@ print("\n\n")
 
 #plt.title('Estimated number of clusters: %d' % n_clusters_)
 #plt.show()
-
+log.close()
