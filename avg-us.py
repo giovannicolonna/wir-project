@@ -11,12 +11,19 @@ beers_json = input_json.read()
 input_json.close()
 
 # lista di birre. Ogni birra e' un dict con i vari campi, tra cui review che e' una lista
+
 beers = json.loads(beers_json)
+
 
 output_file = open(INPUTFILE+"-vectorialized.tsv", 'w')
 
+
 for beer in beers:
-    tot_rev = len(beer['reviews'])
+
+    if 'reviews' not in beer.keys():
+        break
+    else:
+        tot_rev = len(beer['reviews'])
     beer_name = str(beer['name'].encode('utf-8'))
     avg_look = 0
     avg_smell = 0
@@ -30,6 +37,7 @@ for beer in beers:
     w_avg_taste = 0
     w_avg_feel = 0
     w_avg_overall = 0
+    position = str(beer['position'])
 
     for review in beer['reviews']:
 
@@ -76,8 +84,9 @@ for beer in beers:
     output_file.write(str(w_avg_smell)+'\t')
     output_file.write(str(w_avg_taste)+'\t')
     output_file.write(str(w_avg_feel)+'\t')
-    output_file.write(str(w_avg_overall)+'\n')
+    output_file.write(str(w_avg_overall)+'\t')
 
+    output_file.write(str(position)+'\n')
 
 output_file.close()
 

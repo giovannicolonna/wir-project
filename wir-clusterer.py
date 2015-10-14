@@ -8,11 +8,22 @@ __author__ = 'gio'
 ## necessita l'installazione di "scipy"
 
 import csv
+from collections import defaultdict
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.cluster import DBSCAN
-from sklearn import metrics
+import pprint as pp
 
+from sklearn.cluster import DBSCAN
+from sklearn.cluster import AgglomerativeClustering
+from sklearn import metrics
+from sklearn.datasets.samples_generator import make_swiss_roll
+import mpl_toolkits.mplot3d.axes3d as p3
+LOGFILE = "clustering-log.txt"
+log = open(LOGFILE, "w")
+
+
+
+names = []
 
 ### STEP 1:
 ## Costruisce una matrice di float a partire da un file tsv <nomebirra><tab><arraydimedie> ottenuto dall'esecuzione di avg-us.py
@@ -22,7 +33,7 @@ from sklearn import metrics
 ## NOTE: i nomi delle birre non vengono mantenuti nella matrice X
 
 INPUTFILE = "top-us" #si puo' scegliere tra "top-us" o "top250"
-
+log.write("Clustering on: "+INPUTFILE+'\n\n')
 f = open(INPUTFILE+"-vectorialized.tsv",'r')
 x = []
 true_labels = []  # non mi e' chiaro lo scopo, dev'essere composto da numeri che vanno da 2 a num.birre-1 per dare
@@ -31,24 +42,65 @@ i = 0
 for line in csv.reader(f,delimiter='\t'):
     currentVector = []
     first = True
+    size = len(line)
     for elem in line:
         if first:
             first = False
+            names.append(elem)
             continue  # ignoriamo il nome della birra e prendiamo solo le medie
         currentVector.append(elem)
     x.append(currentVector)
     true_labels.append(i)
     i += 1
-    if i > 7:  # etichettiamo inizialmente ogni birra con un numero da 0 a 7
-        i = 0
+
 f.close()
 
 X = np.array(x)  # convertiamo la matrice X e l'array true_labels nel formato numpy.array richiesto per DBScan
 true_labels = np.array(true_labels)
+
+log.write("Matrix of beers:\n\n")
+log.write(str(X))
+log.write("\n\n")
 print "Beer matrix:\n"
 print X  # stampa matrice delle birre
 print '\n\n'
 
+## RANDOM MATRIX
+n_samples = 1500
+noise = 0.05
+Y, _ = make_swiss_roll(n_samples,noise)
+Y[:, 1] *= .5
+
+
+## AGGLOMERATIVE CLUSTERING
+
+print "AGGLOMERATIVE CLUSTERING"
+k = 7
+ward = AgglomerativeClustering(n_clusters=k, linkage='ward').fit(X)
+labelagg = ward.labels_
+
+print X
+
+#plotting....
+#fig = plt.figure()
+#ax = p3.Axes3D(fig)
+#ax.view_init(7,-80)
+#for l in np.unique(labelagg):
+#    ax.plot3D(X[labelagg == l, 0],X[labelagg == l,1], X[labelagg == l, 2],
+#              'o', color=plt.cm.jet(np.float(l) / np.max(labelagg + 1)))
+#plt.title("Plot:")
+#plt.show()
+
+
+
+
+clusters = defaultdict(set)
+j=0
+for elem in labelagg:
+    clusters[elem].add(names[j])
+    j+=1
+for elem in clusters:
+    print elem, sorted(clusters[elem])
 
 ## Step 2: DB SCAN clustering
 
@@ -69,37 +121,58 @@ print '\n\n'
 
 ## spero di essere stato chiaro :)
 
-EPSILON = 0.116
-MIN_SAMPLES = 6
-db = DBSCAN(EPSILON,MIN_SAMPLES,metric='euclidean',p=None,random_state=None).fit(X)
-labels = db.labels_
+#EPSILON = 0.116
+#MIN_SAMPLES = 6
+#log.write("Starting DBSCAN clustering, parameters:\n")
+#log.write("Epsilon: "+str(EPSILON)+'\n')
+#log.write("Min Samples: "+str(MIN_SAMPLES)+'\n\n')
+#db = DBSCAN(EPSILON,MIN_SAMPLES,metric='euclidean',p=None,random_state=None).fit(X)
+#labels = db.labels_
 
-print "Initial labels:\n"
-print true_labels
-print "\n"
-print "Label set after DBScan:\n"
-print labels
-print "\n"
-
-core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
-core_samples_mask[db.core_sample_indices_] = True
-labels = db.labels_
+#print "Initial labels:\n"
+#print true_labels
+#log.write("\nInitial labeling: \n")
+#log.write(str(true_labels))
+#log.write("\n")
+#print "\n"
+#print "Label set after DBScan:\n"
+#print labels
+#print "\n"
+#log.write("Labeling after DBScan: \n")
+#log.write(str(labels))
+#log.write("\n\n")
+#core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
+#core_samples_mask[db.core_sample_indices_] = True
+#labels = db.labels_
 
 # Number of clusters in labels, ignoring noise if present.
-n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+#n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
 
 ## Statistiche strane:
-print('Estimated number of clusters: %d' % n_clusters_)
-print("Homogeneity: %0.3f" % metrics.homogeneity_score(true_labels,labels))
-print("Completeness: %0.3f" % metrics.completeness_score(true_labels, labels))
-print("V-measure: %0.3f" % metrics.v_measure_score(true_labels, labels))
-print("Adjusted Rand Index: %0.3f" % metrics.adjusted_rand_score(true_labels, labels))
-print("Adjusted Mutual Information: %0.3f" % metrics.adjusted_mutual_info_score(true_labels, labels))
-try:
+#print('Estimated number of clusters: %d' % n_clusters_)
+#log.write('Estimated number of clusters: %d' % n_clusters_+"\n")
+
+#print("Homogeneity: %0.3f" % metrics.homogeneity_score(true_labels,labels))
+#log.write("Homogeneity: %0.3f" % metrics.homogeneity_score(true_labels,labels)+'\n')
+
+#print("Completeness: %0.3f" % metrics.completeness_score(true_labels, labels))
+#log.write("Completeness: %0.3f" % metrics.completeness_score(true_labels, labels)+'\n')
+
+#print("V-measure: %0.3f" % metrics.v_measure_score(true_labels, labels))
+#log.write("V-measure: %0.3f" % metrics.v_measure_score(true_labels, labels)+'\n')
+
+#print("Adjusted Rand Index: %0.3f" % metrics.adjusted_rand_score(true_labels, labels))
+#log.write("Adjusted Rand Index: %0.3f" % metrics.adjusted_rand_score(true_labels, labels)+'\n')
+
+#print("Adjusted Mutual Information: %0.3f" % metrics.adjusted_mutual_info_score(true_labels, labels))
+#log.write("Adjusted Mutual Information: %0.3f" % metrics.adjusted_mutual_info_score(true_labels, labels)+'\n')
+#try:
     ## Attenzione, se non ci sono core-samples, quindi non ci sono clusters, qua lancia un'eccezione
-    print("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, labels))
-except:
-    print("\nWARNING: DBScan has not found any clustering. Re-tune the parameters.\n")
+    #print("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, labels))
+    #log.write("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, labels)+'\n')
+#except:
+    #print("\nWARNING: DBScan has not found any clustering. Re-tune the parameters.\n")
+    #log.write("\nWARNING: DBScan has not found any clustering. Re-tune the parameters.\n")
 print("\n\n")
 
 ## Step 3: Plotting
@@ -108,23 +181,23 @@ print("\n\n")
 
 
 # Black removed and is used for noise instead.
-unique_labels = set(labels)
-colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_labels)))
-for k, col in zip(unique_labels, colors):
-    if k == -1:
+#unique_labels = set(labels)
+#colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_labels)))
+#for k, col in zip(unique_labels, colors):
+#    if k == -1:
         # Black used for noise.
-        col = 'k'
+#        col = 'k'
 
-    class_member_mask = (labels == k)
+#    class_member_mask = (labels == k)
 
-    xy = X[class_member_mask & core_samples_mask]
-    plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=col,
-             markeredgecolor='k', markersize=14)
+#    xy = X[class_member_mask & core_samples_mask]
+#    plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=col,
+#             markeredgecolor='k', markersize=14)
 
-    xy = X[class_member_mask & ~core_samples_mask]
-    plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=col,
-             markeredgecolor='k', markersize=6)
+#    xy = X[class_member_mask & ~core_samples_mask]
+#    plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=col,
+#             markeredgecolor='k', markersize=6)
 
-plt.title('Estimated number of clusters: %d' % n_clusters_)
-plt.show()
+#plt.title('Estimated number of clusters: %d' % n_clusters_)
+#plt.show()
 
