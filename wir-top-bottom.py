@@ -4,7 +4,9 @@ import sys
 import math
 import pprint as pp
 
-# [name, look, smell, taste, feel, overall, w_look, w_smell, w_taste, w_feel, w_overall]
+# [name, look, smell, taste, feel, overall] FOR TOP-STATES
+# [w_look, w_smell, w_taste, w_feel, w_overall] FOR TOP-US and TOP250
+
 fields = {}
 fields["name"] = 0
 fields["look"] = 1
@@ -12,17 +14,19 @@ fields["smell"] = 2
 fields["taste"] = 3
 fields["feel"] = 4
 fields["overall"] = 5
-fields["w_look"] = 6
-fields["w_smell"] = 7
-fields["w_taste"] = 8
-fields["w_feel"] = 9
-fields["w_overall"] = 10
+# fields["w_look"] = 6
+# fields["w_smell"] = 7
+# fields["w_taste"] = 8
+# fields["w_feel"] = 9
+# fields["w_overall"] = 10
 
+# loading states abbreviations in reference list
 reference = ['us']
 with open('states.tsv') as states:
     for line in states:
         reference.append(line.split('\t')[0])
 
+# excluding python script
 argv = sys.argv[1:len(sys.argv)]
 
 ref = 'top250'
@@ -68,13 +72,11 @@ for beer in input_beers:
             distances.append((name, dist))
     similar[beer["name"]] = distances
 
-
 print
-
 
 for beer in similar:
     # ordinare similar[beer] (lista di tuple (nomebirra, distanza beer-nomebirra))
-    ordered_distances = sorted(similar[beer], key=lambda k:k[1], reverse=True)
+    ordered_distances = sorted(similar[beer], key=lambda k: k[1], reverse=True)
     top10 = ordered_distances[0:10]
     bottom10 = ordered_distances[len(ordered_distances)-10:len(ordered_distances)]
     bottom10 = sorted(bottom10, key=lambda k: k[1])

@@ -7,7 +7,9 @@ import pprint as pp
 LOGFILE = "ranking-log.txt"
 log = open(LOGFILE, "w")
 
-# [name, look, smell, taste, feel, overall, w_look, w_smell, w_taste, w_feel, w_overall]
+# [name, look, smell, taste, feel, overall] FOR TOP-STATES
+# [w_look, w_smell, w_taste, w_feel, w_overall] FOR TOP-US and TOP250
+
 fields = {}
 fields["name"] = 0
 fields["look"] = 1
@@ -15,20 +17,22 @@ fields["smell"] = 2
 fields["taste"] = 3
 fields["feel"] = 4
 fields["overall"] = 5
-fields["w_look"] = 6
-fields["w_smell"] = 7
-fields["w_taste"] = 8
-fields["w_feel"] = 9
-fields["w_overall"] = 10
+# fields["w_look"] = 1
+# fields["w_smell"] = 2
+# fields["w_taste"] = 3
+# fields["w_feel"] = 4
+# fields["w_overall"] = 5
 
+# loading states abbreviations in reference list
 reference = ['us']
 with open('states.tsv') as states:
     for line in states:
         reference.append(line.split('\t')[0])
 
+# excluding python script
 argv = sys.argv[1:len(sys.argv)]
 
-ref = 'top250'
+ref = 'top250'      # set top250 as default
 if argv[0] in reference:
     if argv[0] == 'us':
         ref = 'top-'+argv[0]
@@ -38,7 +42,7 @@ if argv[0] in reference:
 argv = [arg.lower() for arg in argv if arg in fields]
 
 
-log.write("Considered features: "+str(argv)+"\n")
+log.write("Considering features: "+str(argv)+"\n")
 log.write("Ranking beers according to features...\n")
 beers = []
 
@@ -57,7 +61,7 @@ with open(ref+"-vectorialized.tsv", "r") as input_file:
 beers = sorted(beers, key=lambda entry: entry["norm"], reverse=True)
 print("RANKED BEERS ACCORDING TO: "+str(argv))
 
-log.write("\nRanking according to features:\n")
+log.write("\nRanking according to chosen features:\n")
 for b in beers:
     log.write(str(b)+"\n")
 
