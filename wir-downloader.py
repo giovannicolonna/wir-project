@@ -8,16 +8,18 @@ import time
 import sys
 
 
+
 def request(URL):
     net_control = True
     while net_control:
         try:
-            HTML = requests.get(URL).text  # try except
+            HTML = requests.get(URL, timeout=5).text  # try except
             net_control = False
             logging.info("OK: Connection established")
         except requests.RequestException:
             time.sleep(4)
-            logging.error("Connection error (first connection), retrying")
+            logging.error("Connection error, retrying")
+            print "Connection error, retrying"
     return HTML
 
 logging.basicConfig(filename='downloader.log',
@@ -25,19 +27,25 @@ logging.basicConfig(filename='downloader.log',
                     datefmt='%Y/%m/%d %H:%M',
                     filemode='w',
                     level=logging.DEBUG)
+try:
+    INPUT = sys.argv[1]
+except IndexError:
+    logging.error("Please, insert the desired scraping section: 'top-250','top-us' or 'top-states'")
+    print "Please, insert the desired scraping section: 'top-250','top-us' or 'top-states'"
+    exit(1)
 
-INPUT = sys.argv[1]
 parser = "lxml"
 baseUrl = "http://www.beeradvocate.com"
-directory = INPUT+"/"
-
-if os.path.exists(directory):
-    shutil.rmtree(directory)
-os.mkdir(directory)
 
 t0 = time.time()
 
 if INPUT == "top-states":
+    directory = INPUT+"/"
+
+    if os.path.exists(directory):
+        shutil.rmtree(directory)
+    os.mkdir(directory)
+
     states = {}
     st = open("states.tsv", "r")
     for line in st:
@@ -50,7 +58,7 @@ if INPUT == "top-states":
 
     for state in states:
 
-        logging.debug("STATE: " + state)
+        logging.debug("\n\nSTATE: " + state)
         state_num += 1
         print state, state_num
         url = baseUrl + "/lists/state/" + states[state]
@@ -84,13 +92,11 @@ if INPUT == "top-states":
             url = link + topr
 
             html = request(url)
-
             soup = BeautifulSoup(html, parser)
             rev = soup.find("span", "ba-reviews").string
             rev = int(re.sub(",", "", rev))
-
             logging.info("\tNumber of reviews: " + str(rev))
-            logging.debug("\tReviews downloaded: " + str(offset) + "\n\t\t" + str(url))
+            logging.debug("\tReviews downloaded, page " + str(offset) + "\n\t\t" + str(url))
             output = open(directory + states[state] + "-" + str(count) + "-" + str(offset) + ".html", "w")
             output.write(str(soup))
             output.close()
@@ -102,7 +108,6 @@ if INPUT == "top-states":
                 url = link + topr
                 html = request(url)
                 soup = BeautifulSoup(html, parser)
-
                 logging.debug("\tReviews downloaded: " + str(offset) + "\n\t\t" + str(url) + "\n")
                 output = open(directory + states[state] + "-" + str(count) + "-" + str(offset) + ".html", "w")
                 output.write(str(soup))
@@ -115,8 +120,21 @@ if INPUT == "top-states":
 else:
     if INPUT == "top-250":
         url = baseUrl + "/lists/top/"
+        directory = INPUT+"/"
+        if os.path.exists(directory):
+            shutil.rmtree(directory)
+        os.mkdir(directory)
     else:
-        url = baseUrl + "/lists/us/"
+        if INPUT == "top-us":
+            url = baseUrl + "/lists/us/"
+            directory = INPUT+"/"
+            if os.path.exists(directory):
+                shutil.rmtree(directory)
+            os.mkdir(directory)
+        else:
+            logging.error("Please, insert the desired scraping section: 'top-250','top-us' or 'top-states'")
+            print "Please, insert the desired scraping section: 'top-250','top-us' or 'top-states'"
+            exit(1)
 
     logging.debug("Downloading html pages from "+baseUrl+" for "+INPUT+" beers")
     logging.info("Requesting page: " + url)
@@ -145,7 +163,7 @@ else:
         offset = 0
         count += 1
         print "Beer number", count
-        logging.debug("Beer number: " + str(count))
+        logging.debug("\n\nBeer number: " + str(count))
 
         topr = "?sort=topr&start=" + str(offset)
         url = link + topr
@@ -157,7 +175,7 @@ else:
         rev = int(re.sub(",", "", rev))
 
         logging.info("Number of reviews: " + str(rev))
-        logging.debug("\tReviews downloaded: " + str(offset) + "\n\t\t" + str(url))
+        logging.debug("\tReviews downloaded, page: " + str(offset) + "\n\t\t" + str(url))
         output = open(directory + str(count) + "-" + str(offset) + ".html", "w")
         output.write(str(soup))
         output.close()
