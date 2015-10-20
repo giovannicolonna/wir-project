@@ -24,18 +24,22 @@ with open('states.tsv') as states:
 # excluding python script
 argv = sys.argv[1:len(sys.argv)]
 
+if len(argv) == 0:
+    argv.append("overall")
+
+
 ref = 'top-250'      # set top-250 as default
 if argv[0] in reference:
     if argv[0] == 'us':
         ref = 'top-'+argv[0]
     else:
         ref = "states-tsv/top-"+argv[0]
+    if len(argv) == 1:
+        argv.append("overall")
 
 argv = [arg.lower() for arg in argv if arg in fields]
 
 
-log.write("Considering features: "+str(argv)+"\n")
-log.write("Ranking beers according to features...\n")
 beers = []
 
 with open(ref+"-vectorialized.tsv", "r") as input_file:
@@ -53,22 +57,14 @@ with open(ref+"-vectorialized.tsv", "r") as input_file:
 beers = sorted(beers, key=lambda entry: entry["norm"], reverse=True)
 print("RANKED BEERS ACCORDING TO: "+str(argv))
 
-log.write("\nRanking according to chosen features:\n")
-for b in beers:
-    log.write(str(b)+"\n")
+if "/" in ref:
+    ref = ref.split("/")[1]
 
+output_file = open("Ranking_output.txt", 'w')
+output_file.write("Ranking on "+ref+" according to features: "+str(argv)+"\n")
+for b in beers:
+    output_file.write(str(b)+"\n")
+
+output_file.close()
 pp.pprint(beers)
 
-# top10 = beers[0:10]
-# bottom10 = beers[len(beers)-10:len(beers)]
-# bottom10 = sorted(bottom10, key=lambda entry:entry["norm"])
-
-# log.write("\nTop 10 beers according features:\n")
-# for b in top10:
-#     log.write(str(b)+"\n")
-
-# log.write("\nBottom 10 beers according features:\n")
-# for b in bottom10:
-#     log.write(str(b)+"\n")
-
-log.close()
