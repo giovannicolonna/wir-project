@@ -1,5 +1,14 @@
 # Web Information Retrieval project
 
+Guida all'uso:
+- lanciare wir-downloader.py per scaricare gli html dal sito, specificando in input quale set di birre si vuole scaricare, la classifica "top-us" degli USA, le classifiche "top-states" dei singoli stati americani o le migliori "top-250" in assoluto. (> python wir-downloader.py [top-us|top-states|top-250] )
+- lanciare wir-parser.py per ottenere il dataset JSON definitivo, specificare anche in questo caso di quale dataset si vuole il parsing in JSON (> python wir-parser.py [top-us|top-states|top-250] )
+
+Per effettuare clustering, ranking e top-bottom 10:
+- lanciare wir-avg.py per convertire il dataset in un formato numerico
+- lanciare wir-clusterer.py per effettuare DBScan Clustering e Agglomerative Clustering
+- lanciare wir-ranking.py per avere un ranking generale in base alle caratteristiche, wir-top-bottom.py per avere una classifica delle dieci birre più e meno simili ad una data birra in input
+
 
 Scraping da http://www.beeradvocate.com/ :
 
@@ -62,11 +71,3 @@ Esempio di JSON:
 
 ]
 ```
-Guida all'uso:
-- lanciare wir-downloader.py per scaricare gli html dal sito
-- lanciare wir-parser.py per ottenere il dataset JSON definitivo
-
-Per effettuare clustering, ranking e top-bottom 10:
-- lanciare wir-avg.py per convertire il dataset in un formato numerico
-- lanciare wir-clusterer.py per effettuare DBScan Clustering e Agglomerative Clustering
-- lanciare wir-ranking.py per avere un ranking generale in base alle caratteristiche, wir-top-bottom.py per avere una classifica delle dieci birre più e meno simili ad una data birra in input
