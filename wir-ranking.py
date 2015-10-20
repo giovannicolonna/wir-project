@@ -4,9 +4,6 @@ import sys
 import math
 import pprint as pp
 
-LOGFILE = "ranking-log.txt"
-log = open(LOGFILE, "w")
-
 # [name, look, smell, taste, feel, overall] FOR TOP-STATES
 # [w_look, w_smell, w_taste, w_feel, w_overall] FOR TOP-US and TOP250
 
@@ -17,11 +14,6 @@ fields["smell"] = 2
 fields["taste"] = 3
 fields["feel"] = 4
 fields["overall"] = 5
-# fields["w_look"] = 1
-# fields["w_smell"] = 2
-# fields["w_taste"] = 3
-# fields["w_feel"] = 4
-# fields["w_overall"] = 5
 
 # loading states abbreviations in reference list
 reference = ['us']
@@ -32,7 +24,7 @@ with open('states.tsv') as states:
 # excluding python script
 argv = sys.argv[1:len(sys.argv)]
 
-ref = 'top250'      # set top250 as default
+ref = 'top-250'      # set top-250 as default
 if argv[0] in reference:
     if argv[0] == 'us':
         ref = 'top-'+argv[0]

@@ -31,7 +31,7 @@ log = open(LOGFILE, "w")
 ##        true_labels, un array di interi della classe numpy.array che fungono da etichette iniziali del clustering
 ## NOTE: i nomi delle birre non vengono mantenuti nella matrice X
 
-INPUTFILE = "top250" #si puo' scegliere tra "top-us" o "top250"
+INPUTFILE = "top-250" #si puo' scegliere tra "top-us" o "top-250"
 
 
 names = []

@@ -1,104 +1,181 @@
 from bs4 import BeautifulSoup
 import requests
 import re
-import time
+import logging
 import shutil
 import os
 import time
+import sys
 
-LOGFILE = "top250-log.txt"
-log = open(LOGFILE, "w")
-directory = "top250/"
+
+def request(URL):
+    net_control = True
+    while net_control:
+        try:
+            HTML = requests.get(URL).text  # try except
+            net_control = False
+            logging.info("OK: Connection established")
+        except requests.RequestException:
+            time.sleep(4)
+            logging.error("Connection error (first connection), retrying")
+    return HTML
+
+logging.basicConfig(filename='downloader.log',
+                    format='%(asctime)s %(levelname)s:%(message)s',
+                    datefmt='%Y/%m/%d %H:%M',
+                    filemode='w',
+                    level=logging.DEBUG)
+
+INPUT = sys.argv[1]
 parser = "lxml"
 baseUrl = "http://www.beeradvocate.com"
-url = baseUrl + "/lists/top/"
-
-t0 = time.time()
+directory = INPUT+"/"
 
 if os.path.exists(directory):
     shutil.rmtree(directory)
 os.mkdir(directory)
 
-log.write("Requesting page: " + url + "\n")
+t0 = time.time()
 
-netControl = True
-while netControl:
-    try:
-        html = requests.get(url).text  # try except
-        netControl = False
-        log.write("OK: Connection established\n")
-    except requests.RequestException:
-        time.sleep(4)
-        print "ERR: Connection error (first connection), retrying...\n"
-        log.write("ERR: Connection error (first connection)\n")
+if INPUT == "top-states":
+    states = {}
+    st = open("states.tsv", "r")
+    for line in st:
+        line = line.split("\t")
+        states[line[1]] = line[0]
+    st.close()
 
-soup = BeautifulSoup(html, parser)
+    state_num = 0
+    logging.debug("Downloading html pages from "+baseUrl+" for "+INPUT+" beers")
 
-log.write("Retrieving links...\n")
-links = []
+    for state in states:
 
-line = 0
-for a in soup.select("td span a"):
-    if line % 3 == 0:  # line is a beer
-        link = baseUrl + a["href"]
-        links.append(link)
-    line += 1
+        logging.debug("STATE: " + state)
+        state_num += 1
+        print state, state_num
+        url = baseUrl + "/lists/state/" + states[state]
+        logging.info("Requesting page: " + url)
 
-log.write("Links retrieved: " + str(len(links)) + "\n\n")
+        html = request(url)
+        soup = BeautifulSoup(html, parser)
 
-# per ogni link scarico le prime 100 recensioni e salvo in locale... (4 pag)
+        logging.info("Retrieving links...")
+        links = []
 
-log.write("Downloading reviews...\n")
-count = 0
-for link in links:
-    offset = 0
-    count += 1
-    print "Beer number", count
-    log.write("Beer number: " + str(count) + "\n")
+        line = 0
+        for a in soup.select("td span a"):
+            if line % 3 == 0:  # line is a beer
+                link = baseUrl + a["href"]
+                links.append(link)
+            line += 1
 
-    topr = "?sort=topr&start=" + str(offset)
-    url = link + topr
-    # Connection, try-except
-    netControl = True
-    while (netControl):
-        try:
-            html = requests.get(url).text
-            netControl = False
-        except requests.RequestException:
-            time.sleep(4)
-            print("ERR: Connection error in beer page, retrying...\n")
-            log.write("ERR: Connection error in beer page, retrying...\n")
+        logging.debug("Links retrieved: " + str(len(links)) + "\n")
+        logging.info("Downloading reviews...")
+
+        count = 0
+        for link in links:
+
+            offset = 0
+            count += 1
+            print "Beer number", count
+            logging.info("Beer number: " + str(count))
+
+            topr = "?sort=topr&start=" + str(offset)
+            url = link + topr
+
+            html = request(url)
+
+            soup = BeautifulSoup(html, parser)
+            rev = soup.find("span", "ba-reviews").string
+            rev = int(re.sub(",", "", rev))
+
+            logging.info("\tNumber of reviews: " + str(rev))
+            logging.debug("\tReviews downloaded: " + str(offset) + "\n\t\t" + str(url))
+            output = open(directory + states[state] + "-" + str(count) + "-" + str(offset) + ".html", "w")
+            output.write(str(soup))
+            output.close()
+
+            offset += 25
+            while offset < rev and offset <= 100:
+
+                topr = "?sort=topr&start=" + str(offset)
+                url = link + topr
+                html = request(url)
+                soup = BeautifulSoup(html, parser)
+
+                logging.debug("\tReviews downloaded: " + str(offset) + "\n\t\t" + str(url) + "\n")
+                output = open(directory + states[state] + "-" + str(count) + "-" + str(offset) + ".html", "w")
+                output.write(str(soup))
+                output.close()
+                offset += 25
+
+        count = 0
+
+
+else:
+    if INPUT == "top-250":
+        url = baseUrl + "/lists/top/"
+    else:
+        url = baseUrl + "/lists/us/"
+
+    logging.debug("Downloading html pages from "+baseUrl+" for "+INPUT+" beers")
+    logging.info("Requesting page: " + url)
+
+    html = request(url)
+
     soup = BeautifulSoup(html, parser)
-    rev = soup.find("span", "ba-reviews").string
-    rev = int(re.sub(",", "", rev))
 
-    log.write("\tNumber of reviews: " + str(rev) + "\n")
-    log.write("\tReviews downloaded: " + str(offset) + "\n\t\t" + str(url) + "\n")
-    output = open(directory + str(count) + "-" + str(offset) + ".html", "w")
-    output.write(str(soup))
-    output.close()
+    logging.info("Retrieving links...")
+    links = []
 
-    offset += 25
-    while offset < rev and offset <= 100:
+    line = 0
+    for a in soup.select("td span a"):
+        if line % 3 == 0:  # line is a beer
+            link = baseUrl + a["href"]
+            links.append(link)
+        line += 1
+
+    logging.info("Links retrieved: " + str(len(links)) + "\n")
+
+    # for each link download first 100 reviews and save in local... (4 pages)
+
+    logging.info("Downloading reviews...")
+    count = 0
+    for link in links:
+        offset = 0
+        count += 1
+        print "Beer number", count
+        logging.debug("Beer number: " + str(count))
+
         topr = "?sort=topr&start=" + str(offset)
         url = link + topr
-        # Connection: try-except
-        netControl = True
-        while (netControl):
-            try:
-                html = requests.get(url).text
-                netControl = False
-            except requests.RequestException:
-                time.sleep(4)
-                print "ERR: Connection error in reviews download page, retrying..."
-                log.write("ERR: Connection error in reviews download page, retrying...\n")
+
+        html = request(url)
+
         soup = BeautifulSoup(html, parser)
-        log.write("\tReviews downloaded: " + str(offset) + "\n\t\t" + str(url) + "\n")
+        rev = soup.find("span", "ba-reviews").string
+        rev = int(re.sub(",", "", rev))
+
+        logging.info("Number of reviews: " + str(rev))
+        logging.debug("\tReviews downloaded: " + str(offset) + "\n\t\t" + str(url))
         output = open(directory + str(count) + "-" + str(offset) + ".html", "w")
         output.write(str(soup))
         output.close()
+
         offset += 25
+        while offset < rev and offset <= 100:
+
+            topr = "?sort=topr&start=" + str(offset)
+            url = link + topr
+            html = request(url)
+            soup = BeautifulSoup(html, parser)
+
+            logging.debug("\tReviews downloaded: " + str(offset) + "\n\t\t" + str(url))
+            output = open(directory + str(count) + "-" + str(offset) + ".html", "w")
+            output.write(str(soup))
+            output.close()
+            offset += 25
+
 t1 = time.time()
-log.write("Download completed in "+str(t1-t0)+" sec\n")
-log.close()
+logging.info("Download completed in "+str(t1-t0)+" sec")
 
