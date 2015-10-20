@@ -10,7 +10,7 @@ from sklearn.cluster import AgglomerativeClustering
 from sklearn import metrics
 from sklearn.datasets.samples_generator import make_swiss_roll
 
-logging.basicConfig(filename='parser.log',
+logging.basicConfig(filename='clustering.log',
                     format='%(asctime)s %(levelname)s:%(message)s',
                     datefmt='%Y/%m/%d %H:%M',
                     filemode='w',
