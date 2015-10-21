@@ -12,7 +12,12 @@ from collections import OrderedDict
 # Parses the html files downloaded from the top-250 beers of BeerAdvocate, and builds the JSON array of these beers
 
 # INPUTFILE can take values "top-250", "top-us", "top-states"
-INPUT = sys.argv[1]
+try:
+    INPUT = sys.argv[1]
+except IndexError:
+    logging.error("Invalid source folder name: 'top-250','top-us' or 'top-states' are required.")
+    print "Please, insert a valid source folder: 'top-250','top-us' or 'top-states'"
+    exit(1)
 
 output_directory = "data"
 if not os.path.exists(output_directory):
@@ -25,15 +30,19 @@ logging.basicConfig(filename='parser.log',
                     level=logging.DEBUG)
 logging.debug("Parsing htmls for "+INPUT+".")
 
-directory = INPUT+"/"
-htmls = sorted(os.listdir(directory))
+
 
 if INPUT == "top-250" or INPUT == "top-us":
     beers = []
     old = "1"
     beer = OrderedDict()  # OrderedDict keeps insertion order
     reviews = []
-
+    directory = INPUT+"/"
+    if not os.path.exists(directory):
+        logging.error(directory+" input folder does not exists.")
+        print directory+" input folder does not exists. Execute downloader first."
+        exit(1)
+    htmls = sorted(os.listdir(directory))
     for html in htmls:
 
         if html[0] == ".":
@@ -126,14 +135,14 @@ if INPUT == "top-250" or INPUT == "top-us":
                         for user in muted.findAll('a', 'username'):
                             reviewer = user.get_text()
 
-                        # Code to extract link and points of each reviewer
+                            # Code to extract link and points of each reviewer
                             reviewerPage = user.get('href')
                             reviewerProfileLink = 'http://www.beeradvocate.com'+reviewerPage+'?card=1'
-                        # Connection: try-except
+                            # Connection: try-except
                             netControl = True
                             while netControl:
                                 try:
-                                    html = requests.get(reviewerProfileLink).text
+                                    html = requests.get(reviewerProfileLink, timeout=5).text
                                     netControl = False
                                 except requests.RequestException:
                                     time.sleep(4)
@@ -172,12 +181,18 @@ if INPUT == "top-250" or INPUT == "top-us":
 
     logging.info("JSON dataset has been successfully built.")
 
-else:                     # top-states
+elif INPUT == "top-states":                     # top-states
     beers = []
     old = "1"
     old_s = "ak"
     beer = OrderedDict()  # OrderedDict keeps insertion order
     reviews = []
+    directory = INPUT+"/"
+    if not os.path.exists(directory):
+        logging.error(directory+" input folder does not exists.")
+        print directory+" input folder does not exists. Execute downloader first."
+        exit(1)
+    htmls = sorted(os.listdir(directory))
 
     for html in htmls:
         if html[0] == '.':
@@ -196,10 +211,10 @@ else:                     # top-states
 
             if s != old_s:
                 logging.info("Building JSON dataset...")
-                output = open("top-states-"+old_s+".json", 'w')
+                output = open("data/top-states-"+old_s+".json", 'w')
                 output.write(json.dumps(beers, indent=4))
                 output.close()
-                logging.info("JSON dataset has been successfully built.")
+                logging.info("JSON dataset for this state has been successfully built.")
                 beers = []
 
         soup = BeautifulSoup(open(directory+html), "lxml")
@@ -240,7 +255,7 @@ else:                     # top-states
 
         for block in soup.find_all(id='rating_fullview_content_2'):
 
-            logging.info("Reading reviews...")
+
             rate = block.find('span', 'BAscore_norm').get_text().strip()
 
             try:
@@ -292,7 +307,7 @@ else:                     # top-states
             # review['text'] = text
 
             reviews.append(review)
-            logging.info("Reviews of this file have been successfully read.")
+
 
         old = b
         old_s = s
@@ -303,6 +318,10 @@ else:                     # top-states
     output.write(json.dumps(beers, indent=4))
     output.close()
 
+else:
+    logging.error("Please, insert a valid dataset: 'top-250','top-us' or 'top-states'")
+    print "Please, insert a valid dataset: 'top-250','top-us' or 'top-states'"
+    exit(1)
 
 # def sistemaTesto(text):
 #    try:
