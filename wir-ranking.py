@@ -33,7 +33,7 @@ if argv[0] in reference:
     if argv[0] == 'us':
         ref = 'top-'+argv[0]
     else:
-        ref = "states-tsv/top-"+argv[0]
+        ref = "top-"+argv[0]
     if len(argv) == 1:
         argv.append("overall")
 
@@ -42,20 +42,24 @@ argv = [arg.lower() for arg in argv if arg in fields]
 
 beers = []
 
-with open(ref+"-vectorialized.tsv", "r") as input_file:
-    for line in input_file:
-        splitted_line = line.split("\t")
-        beer = {}
-        beer["name"] = splitted_line[0]
-        norm = 0.0
-        for arg in argv:
-            norm += float(splitted_line[fields[arg]])**2
-        beer["norm"] = math.sqrt(norm)
-        beers.append(beer)
+try:
+    with open("data/vectors/"+ref+"-vectorialized.tsv", "r") as input_file:
+        for line in input_file:
+            splitted_line = line.split("\t")
+            beer = {}
+            beer["name"] = splitted_line[0]
+            norm = 0.0
+            for arg in argv:
+                norm += float(splitted_line[fields[arg]])**2
+            beer["norm"] = math.sqrt(norm)
+            beers.append(beer)
+except:
+    print "Vectorized default dataset (top-250) is missing. Execute on another dataset (us or of an American state) or re-execute the wir-avg.py program."
+    exit(1)
 
 # print beers
 beers = sorted(beers, key=lambda entry: entry["norm"], reverse=True)
-print("RANKED BEERS ACCORDING TO: "+str(argv))
+print("Ranking of beers on " + ref + " according to features: "+str(argv))
 
 if "/" in ref:
     ref = ref.split("/")[1]
@@ -67,4 +71,5 @@ for b in beers:
 
 output_file.close()
 pp.pprint(beers)
+print "Ranking has been saved in Ranking_output.txt file."
 
