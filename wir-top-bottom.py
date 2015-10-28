@@ -40,12 +40,12 @@ except IndexError:
 
 if flag:
     try:
-        beer_name = argv[1]
+        beer_name = argv[1].lower()
     except IndexError:
         print("Insert a beer name and characteristics")
         exit(1)
 else:
-    beer_name = argv[0]
+    beer_name = argv[0].lower()
 
 # if no characteristic has been inserted, overall is taken as default
 if flag:
@@ -62,7 +62,7 @@ try:
     with open("data/vectors/"+ref+"-vectorialized.tsv", 'r') as input_file:
         for line in input_file:
             splitted_line = line.split("\t")
-            if beer_name in splitted_line[0]:
+            if beer_name in splitted_line[0].lower():
                 beer = {}
                 beer["name"] = splitted_line[0]
                 for arg in argv:
@@ -108,6 +108,7 @@ for beer in similar:
     output_file.write("Bottom10:\n")
     for b in bottom10:
         output_file.write("\t"+str(b)+"\n")
+    output_file.write("\n")
     print "Bottom10: \n", bottom10
     print
     print "Rankings have been saved in: "+beer_name+"_output.txt file."
