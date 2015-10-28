@@ -2,6 +2,7 @@
 *.txt
 *.json
 top250/
+top-250/
 top-us/
 top-states/
 slides/
