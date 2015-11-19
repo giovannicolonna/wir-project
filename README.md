@@ -77,3 +77,57 @@ Esempio di JSON:
 
 ]
 ```
+
+##11th point
+top 10 per un gruppo di 20 persone
+
+
+che vanno bene a un gruppo di persone, non a una persona sola.
+si risolve in una festa - party - per tutti
+ognuno ha gusti diversi, ora abbiamo sto gruppo di 20 persone quindi cardinalità = 20
+prendiamo 20 profili a caso , dobbiamo fare f obiettivo = guarda questa birra fa tanto felice il 
+
+gruppo
+
+se invece ne abbiamo due, ci sono 3 tipi di f.ob utilizzate:
+- massimizzare (la media) delle somma delle singole soddisfazioni
+
+- problema, sensibile agli outliers. ora il minimo va tenuto in considerazione. soddisfiamo il più 
+
+prossibile la persona meno soddisfatta
+
+- cerca di aggiustare la metrica, considerando anche la standard deviation. cerchiamo di massimizzare 
+
+il grado di equità all'interno (fairness) avg + 1/2*std dove 1/2 = lambda
+
+(ELIMINAZIONE DEGLI OUTLIERS) = non generiamo persone molto insoddisfatte
+
+- mix = sum + 0.5min 
+
+ci fa comodo tenere outliers molto soddisfatti! 
+
+
+
+passiamo OGNI birra sotto ognuna delle 4 funzioni obiettivo.
+
+proviamo questo per 100 gruppi da 20 persone (scelte a caso), calcoliamo ognuna delle 4 f.o. per ogni 
+
+gruppo e ne estraiamo le top 10.
+
+- inviargli i dati per posta.
+
+
+DUE GRUPPI DI CUI ABBIAMO CALCOLATO LE TOP 10 PER LE 4 DIVERSE F.O. discutendo i risultati di ogni 
+
+f.o. (tenendo conto di gruppi in cui si vede la reale differenza degli algoritmi)
+
+
+una slide divisa in due orizzontalmente in cui la prima parte e la seconda due gruppi con tabella
+top10 con sum
+top10 con min 
+ecc...
+(descrizione funz obiettivo non necessaria)
+
+
+
+hashtag (parole più diffuse per città relative all'hashtag----capire la città dall'hashtag)
