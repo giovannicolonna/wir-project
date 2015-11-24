@@ -32,6 +32,7 @@ logging.debug("Parsing htmls for "+INPUT+".")
 
 
 if INPUT == "top-250" or INPUT == "top-us":
+    reviewersAndScores = {}
     beers = []
     old = "1"
     beer = OrderedDict()  # OrderedDict keeps insertion order
@@ -48,6 +49,7 @@ if INPUT == "top-250" or INPUT == "top-us":
             continue
 
         logging.info("Reading html file: "+str(html))
+        print "Reading html file: "+str(html)
         b = html.split("-")[0]
         r = html.split("-")[1]
 
@@ -136,20 +138,24 @@ if INPUT == "top-250" or INPUT == "top-us":
 
                             # Code to extract link and points of each reviewer
                             reviewerPage = user.get('href')
-                            reviewerProfileLink = 'http://www.beeradvocate.com'+reviewerPage+'?card=1'
-                            # Connection: try-except
-                            netControl = True
-                            while netControl:
-                                try:
-                                    html = requests.get(reviewerProfileLink, timeout=5).text
-                                    netControl = False
-                                except requests.RequestException:
-                                    time.sleep(4)
-                                    logging.error("Connection error in reviewer point page, retrying...")
+                            if reviewerPage not in reviewersAndScores:
+                                reviewerProfileLink = 'http://www.beeradvocate.com'+reviewerPage+'?card=1'
+                                # Connection: try-except
+                                netControl = True
+                                while netControl:
+                                    try:
+                                        html = requests.get(reviewerProfileLink, timeout=5).text
+                                        netControl = False
+                                    except requests.RequestException:
+                                        time.sleep(4)
+                                        logging.error("Connection error in reviewer point page, retrying...")
 
-                            soup = BeautifulSoup(html, 'lxml')
-                            for points in soup.findAll('a', 'concealed OverlayTrigger'):
-                                reviewerScore = points.get_text()
+                                soup = BeautifulSoup(html, 'lxml')
+                                for points in soup.findAll('a', 'concealed OverlayTrigger'):
+                                    reviewerScore = points.get_text()
+                                    reviewersAndScores[reviewerPage] = reviewerScore
+                            else:
+                                reviewerScore = reviewersAndScores[reviewerPage]
                 i += 1
 
             review = OrderedDict()
@@ -198,6 +204,7 @@ elif INPUT == "top-states":                     # top-states
             continue
 
         logging.info("Reading html file: "+str(html))
+        print "Reading html file: " + str(html)
         s = html.split("-")[0]
         b = html.split("-")[1]
         r = html.split("-")[2]

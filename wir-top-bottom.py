@@ -40,12 +40,12 @@ except IndexError:
 
 if flag:
     try:
-        beer_name = argv[1]
+        beer_name = argv[1].lower()
     except IndexError:
         print("Insert a beer name and characteristics")
         exit(1)
 else:
-    beer_name = argv[0]
+    beer_name = argv[0].lower()
 
 # if no characteristic has been inserted, overall is taken as default
 if flag:
@@ -58,20 +58,24 @@ else:
 argv = [arg.lower() for arg in argv if arg in fields]
 
 input_beers = []
-with open(ref+"-vectorialized.tsv", 'r') as input_file:
-    for line in input_file:
-        splitted_line = line.split("\t")
-        if beer_name in splitted_line[0]:
-            beer = {}
-            beer["name"] = splitted_line[0]
-            for arg in argv:
-                beer[arg] = splitted_line[fields[arg]]
-            input_beers.append(beer)
+try:
+    with open("data/vectors/"+ref+"-vectorialized.tsv", 'r') as input_file:
+        for line in input_file:
+            splitted_line = line.split("\t")
+            if beer_name in splitted_line[0].lower():
+                beer = {}
+                beer["name"] = splitted_line[0]
+                for arg in argv:
+                    beer[arg] = splitted_line[fields[arg]]
+                input_beers.append(beer)
+except IOError:
+    print "Default dataset (top-250) is missing. Specify another dataset, or re-execute the wir-avg.py on top-250."
+    exit(1)
 
 similar = {}
 for beer in input_beers:
     distances = []
-    with open(ref+"-vectorialized.tsv", "r") as input_file:
+    with open("data/vectors/"+ref+"-vectorialized.tsv", "r") as input_file:
         for line in input_file:
             splitted_line = line.split("\t")
             if splitted_line[0] == beer["name"]:
@@ -95,8 +99,8 @@ for beer in similar:
     bottom10 = ordered_distances[len(ordered_distances)-10:len(ordered_distances)]
     bottom10 = sorted(bottom10, key=lambda k: k[1])
 
-    output_file.write("Top10 and Bottom10 beers similar to "+str(beer_name)+" on "+str(argv)+"\n\n")
-    print ("Top10 and Bottom10 of "+str(beer)+" on "+str(argv))
+    output_file.write("Top10 and Bottom10 beers similar to "+str(beer)+" according to: "+str(argv)+"\n\n")
+    print ("Top10 and Bottom10 of "+str(beer)+" according to: "+str(argv))
     output_file.write("Top10:\n")
     for b in top10:
         output_file.write("\t"+str(b)+"\n")
@@ -104,6 +108,9 @@ for beer in similar:
     output_file.write("Bottom10:\n")
     for b in bottom10:
         output_file.write("\t"+str(b)+"\n")
+    output_file.write("\n")
     print "Bottom10: \n", bottom10
     print
+    print "Rankings have been saved in: "+beer_name+"_output.txt file."
+    print "If there are multiple results, don't worry, we computed rankings for all of them."
 output_file.close()

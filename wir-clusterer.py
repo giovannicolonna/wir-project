@@ -22,22 +22,30 @@ logging.basicConfig(filename='clustering.log',
 ## OUTPUT: X, una matrice di float |beers|x|features| della classe numpy.array
 ##        true_labels, un array di interi della classe numpy.array che fungono da etichette iniziali del clustering
 ## NOTE: i nomi delle birre non vengono mantenuti nella matrice X
-
+if not len(sys.argv)==4:
+    print "Please specify: dataset-name epsilon min_samples"
+    print "Example: top-250 0.06 6"
+    exit(1)
 try:
+    #try with eps = 0.06 and min_sampl = 6
     INPUTFILE = sys.argv[1]
+    EPSILON = float(sys.argv[2])
+    MIN_SAMPLES = int(sys.argv[3])
     if not (INPUTFILE == "top-250" or INPUTFILE == "top-us"):
-        print "Input format error: 'top-250' or 'top-us' is requested"
-        logging.error("Input format error: 'top-250' or 'top-us' is requested")
+        print "Input format error: 'top-250' or 'top-us' is required"
+        logging.error("Input format error: 'top-250' or 'top-us' is required")
         exit(1)
     logging.info("Dataset used: " + str(INPUTFILE))
 except IndexError:
-    INPUTFILE = "top-250"
-    logging.info("No dataset chosen: top-250 as default")
+    print "Invalid input.\n"
+    print "Please specify: dataset-name epsilon min_samples"
+    print "Example: top-250 0.06 6"
+    logging.info("Invalid input")
 
 names = []
 positions = []
 logging.debug("Clustering on: "+INPUTFILE+'\n')
-f = open(INPUTFILE+"-vectorialized.tsv", 'r')
+f = open("data/vectors/"+INPUTFILE+"-vectorialized.tsv", 'r')
 o = open("Clustering_output.txt", 'w')
 
 x = []
@@ -78,7 +86,7 @@ print '\n\n'
 
 ## AGGLOMERATIVE CLUSTERING
 
-print "AGGLOMERATIVE CLUSTERING:\n"
+print "\n\nAGGLOMERATIVE CLUSTERING:\n\n"
 o.write("AGGLOMERATIVE CLUSTERING:\n")
 logging.info("AGGLOMERATIVE CLUSTERING:")
 k = 7
@@ -133,8 +141,7 @@ print "DBSCAN CLUSTERING:\n"
 o.write("\n\n")
 o.write("DBSCAN CLUSTERING:\n")
 
-EPSILON = 0.06
-MIN_SAMPLES = 6
+
 logging.info("Starting DBSCAN clustering, parameters:\nEpsilon: "+str(EPSILON)+"\nMin Samples: "+str(MIN_SAMPLES))
 o.write("Starting DBSCAN clustering, parameters:\nEpsilon: "+str(EPSILON)+"\nMin Samples: "+str(MIN_SAMPLES))
 
@@ -212,7 +219,9 @@ except:
     print("\nWARNING: DBScan has not found any clustering. Re-tune the parameters.\n")
     logging.warning("DBScan has not found any clustering. Re-tune the parameters.")
     o.write("\n"+"DBScan has not found any clustering. Re-tune the parameters.\n")
-print("\n\n")
+
+print "\n\nClusterings performed. Read the Clustering_output.txt file for a detailed result.\n"
+
 
 # Step 3: Plotting
 # Disegna il risultato del clustering, il codice e' della demo

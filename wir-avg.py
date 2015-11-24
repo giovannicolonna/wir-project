@@ -7,12 +7,18 @@ import os
 import shutil
 
 # INPUTFILE can take values "top-250", "top-us", "top-states"
-INPUTFILE = sys.argv[1]
+try:
+    INPUTFILE = sys.argv[1]
+except IndexError:
+    print "Please, insert a valid dataset name: 'top-250','top-us' or 'top-states'"
+    exit(1)
+
 
 if INPUTFILE == "top-states":
-    if os.path.exists("states-tsv"):
-        shutil.rmtree("states-tsv")
-    os.mkdir("states-tsv")
+
+    output_directory = "data/vectors/"
+    if not os.path.exists(output_directory):
+        os.mkdir(output_directory)
 
     states = []
     with open('states.tsv') as states_file:
@@ -20,14 +26,19 @@ if INPUTFILE == "top-states":
             states.append(line.split('\t')[0])
 
     for state in states:
-        input_json = open(INPUTFILE+"-"+state+".json", 'r')
+        try:
+            input_json = open("data/"+INPUTFILE+"-"+state+".json", 'r')
+        except IOError:
+            print "This dataset:" + INPUTFILE+"-"+state+" has not been generated. Execute wir-parser before."
+            exit(1)
+
         beers_json = input_json.read()
         input_json.close()
 
-    # List of beers. Each beer is a dict. The 'review' field is a list as well
+        # List of beers. Each beer is a dict. The 'review' field is a list as well
         beers = json.loads(beers_json)
 
-        output_file = open("states-tsv/top-"+state+"-vectorialized.tsv", 'w')
+        output_file = open(output_directory+"top-"+state+"-vectorialized.tsv", 'w')
 
         for beer in beers:
             tot_rev = len(beer['reviews'])
@@ -61,16 +72,29 @@ if INPUTFILE == "top-states":
             output_file.write(str(avg_overall)+'\n')
 
         output_file.close()
+    print "Conversion executed."
 
-else:
-    input_json = open(INPUTFILE+".json", 'r')
+elif INPUTFILE == "top-us" or INPUTFILE == "top-250":
+
+    output_directory = "data/vectors/"
+    if not os.path.exists(output_directory):
+        os.mkdir(output_directory)
+
+
+    try:
+        input_json = open("data/"+INPUTFILE+".json", 'r')
+    except IOError:
+        print "This dataset has not been generated. Execute wir-parser before."
+        exit(1)
     beers_json = input_json.read()
     input_json.close()
 
-# List of beers. Each beer is a dict. The 'review' field is a list as well
+
     beers = json.loads(beers_json)
 
-    output_file = open(INPUTFILE+"-vectorialized.tsv", 'w')
+
+
+    output_file = open(output_directory+INPUTFILE+"-vectorialized.tsv", 'w')
 
     for beer in beers:
         tot_rev = len(beer['reviews'])
@@ -82,7 +106,7 @@ else:
         # avg_feel = 0
         # avg_overall = 0
 
-    # weighted
+        # weighted
         tot_weight = 0
         w_avg_look = 0
         w_avg_smell = 0
@@ -129,7 +153,7 @@ else:
         # output_file.write(str(avg_feel)+'\t')
         # output_file.write(str(avg_overall)+'\t')
 
-    # print on file weighted characteristics
+        # print on file weighted characteristics
         output_file.write(str(w_avg_look)+'\t')
         output_file.write(str(w_avg_smell)+'\t')
         output_file.write(str(w_avg_taste)+'\t')
@@ -139,3 +163,7 @@ else:
         output_file.write(str(position)+'\n')
 
     output_file.close()
+    print "Conversion executed."
+else:
+    print "Please, insert a valid dataset name: 'top-250','top-us' or 'top-states'"
+    exit(1)
