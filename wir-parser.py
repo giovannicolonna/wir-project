@@ -31,7 +31,6 @@ logging.basicConfig(filename='parser.log',
 logging.debug("Parsing htmls for "+INPUT+".")
 
 
-
 if INPUT == "top-250" or INPUT == "top-us":
     beers = []
     old = "1"
@@ -255,7 +254,6 @@ elif INPUT == "top-states":                     # top-states
 
         for block in soup.find_all(id='rating_fullview_content_2'):
 
-
             rate = block.find('span', 'BAscore_norm').get_text().strip()
 
             try:
@@ -307,7 +305,6 @@ elif INPUT == "top-states":                     # top-states
             # review['text'] = text
 
             reviews.append(review)
-
 
         old = b
         old_s = s
