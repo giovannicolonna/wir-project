@@ -4,12 +4,6 @@ import json
 from collections import OrderedDict, defaultdict
 
 
-def read_json(json):
-    with open(json) as data_file:
-        data = json.load(data_file)
-    return data
-
-
 def create_db(data, db):
     for beer in data:
 
@@ -66,10 +60,7 @@ for line in states:
 
 states.close()
 
-
 output = open("users.json", 'w')
 output.write(json.dumps(users_db, indent=4))
 output.close()
-
-
 
