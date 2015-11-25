@@ -60,7 +60,15 @@ for line in states:
 
 states.close()
 
+db = []
+for k,v in users_db.iteritems():
+    d = OrderedDict()
+    d["user_ID"] = k
+    d["reviews"] = v
+    db.append(d)
+
+
 output = open("users.json", 'w')
-output.write(json.dumps(users_db, indent=4))
+output.write(json.dumps(db, indent=4))
 output.close()
 
