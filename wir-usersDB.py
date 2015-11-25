@@ -19,11 +19,13 @@ def create_db(data, db):
             taste = review['taste']
             feel = review['feel']
             overall = review['overall']
+            rate = review['rate']
 
             reviewed_beer = OrderedDict()
             reviewed_beer['beer_name'] = name
             reviewed_beer['style'] = style
             reviewed_beer['abv'] = abv
+            reviewed_beer['rate'] = rate
             reviewed_beer['look'] = look
             reviewed_beer['smell'] = smell
             reviewed_beer['taste'] = taste
@@ -63,7 +65,17 @@ states.close()
 db = []
 for k, v in users_db.iteritems():
     d = OrderedDict()
+    avg = 0.0
+    for rev in v:
+        try:
+            a = rev['rate']
+        except TypeError:
+            continue
+        avg += float(a)
+        #print avg
+
     d["user_ID"] = k
+    d["average_rating"] = avg/len(v)
     d["reviews"] = v
     db.append(d)
 
