@@ -41,12 +41,12 @@ def create_db(data, db):
 users_db = defaultdict(lambda: list(OrderedDict()))
 
 print "Retrieving users from TOP-250 beers"
-with open("top-250.json") as data_file:
+with open("data/top-250.json") as data_file:
     beers1 = json.load(data_file)
     create_db(beers1, users_db)
 
 print "Retrieving users from TOP-US beers"
-with open("top-us.json") as data_file:
+with open("data/top-us.json") as data_file:
     beers2 = json.load(data_file)
     create_db(beers2, users_db)
 
@@ -56,7 +56,7 @@ for line in states:
     sign = line.split('\t')[0].strip()
     print "\t"+line.split('\t')[1].strip()
 
-    with open("top-states-"+sign+".json") as data_file:
+    with open("data/top-states-"+sign+".json") as data_file:
         beers3 = json.load(data_file)
         create_db(beers3, users_db)
 
@@ -65,18 +65,33 @@ states.close()
 db = []
 for k, v in users_db.iteritems():
     d = OrderedDict()
-    avg = 0.0
+    rate = 0.0
+    look = 0.0
+    smell = 0.0
+    taste = 0.0
+    feel = 0.0
+    overall = 0.0
+
+    # avg = 0.0
     for rev in v:
         try:
-            a = rev['rate']
+            rate += float(rev['rate'])
+            look += float(rev['look'])
+            smell += float(rev['smell'])
+            taste += float(rev['taste'])
+            feel += float(rev['feel'])
+            overall += float(rev['overall'])
+
         except TypeError:
             continue
-        avg += float(a)
-        #print avg
 
-    d["user_ID"] = k
-    d["average_rating"] = avg/len(v)
-    d["reviews"] = v
+    d['user_ID'] = k
+    d['rate'] = rate/len(v)
+    d['look'] = look/len(v)
+    d['smell'] = smell/len(v)
+    d['taste'] = taste/len(v)
+    d['feel'] = feel/len(v)
+    d['overall'] = overall/len(v)
     db.append(d)
 
 
