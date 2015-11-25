@@ -61,7 +61,7 @@ for line in states:
 states.close()
 
 db = []
-for k,v in users_db.iteritems():
+for k, v in users_db.iteritems():
     d = OrderedDict()
     d["user_ID"] = k
     d["reviews"] = v
