@@ -78,7 +78,8 @@ Esempio di JSON:
 ]
 ```
 
-##11th point
+##APPUNTI - 11th point
+###Prima chiamata
 top 10 per un gruppo di 20 persone
 
 
@@ -127,7 +128,42 @@ top10 con sum
 top10 con min 
 ecc...
 (descrizione funz obiettivo non necessaria)
+###Dopo la seconda chiamata
+una birra che va bene al gruppo è una birra recensita da tutti
+:- 
+rappresentazione dell'utente : [.....,....,....,....] (centroide all'interno dello spazio di birre che l'utente ha recensito)
 
+kmeans++, uguale a k means, cambia la fase iniziale di definizione dei centroidi (meglio approssimati).
+
+dato l'utente e una birra facciamo il dot product vettoriale e capiamo il suo grado di soddisfazione.
+
+gradimento di OGNI persona di una birra in input e applichiamo la funzione di aggregazione.
+
+
+(APPROCCIO TRIANGOLO)
+distanza minima dal triangolo = mi piace tantissimo
+
+
+
+
+- ogni birra per ogni delle 20 persone facciamo il dot e prendiamo la somma (1) sum -> max
+
+- utente più insoddisfatto (min) 
+topolino: 5 pippo: 2 (min=2)
+topolino: 3 paperino: 1000 (min=3)
+
+quale scegliamo? min=3 (ranking)
+
+- fair (devstd) 
+prima di fare il
+
+gruppo,birra -> valore (1.47)   = [birra,1.47]
+gruppo,birra2 -> valre (1.59)   = [birra2,1.59]
+
+
+
+..
+adesso con le coppie, facciamo il ranking sul valore e prendiamo le 10 
 
 
 hashtag (parole più diffuse per città relative all'hashtag----capire la città dall'hashtag)
