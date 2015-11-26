@@ -37,7 +37,7 @@ def dot_product(beer, user):
     return s
 
 
-GROUP_SIZE = 5
+GROUP_SIZE = 20
 PATH = "Recommendations"
 
 beers = []
@@ -46,7 +46,7 @@ beers = []
 with open("data/top-250.json") as data_file:
     beers = json.load(data_file)
 
-
+# TOP-STATES beers, removing duplicate beers
 dups = 0
 states = open('states.tsv', 'r')
 for line in states:
@@ -128,16 +128,17 @@ def of_fair(bv, g, k=0.5):
         for user in g:
             sums.append(dot_product(b, user))
 
+        somma = 0.0
+        for i in sums:
+            somma += i
+
         std = 0.0
         for s in sums:
-            std += s*s
-        std /= len(sums)
+            std += (s-(somma/len(sums)))*(s-(somma/len(sums)))       # s*s e' sbagliato! e' (voto - media)^2  !!!
+        std /= (len(sums))
         std = math.sqrt(std)
 
-        s = 0.0
-        for i in sums:
-            s += i
-        fair.append((b['name'], s+k*std))
+        fair.append((b['name'], somma+k*std))
 
     return sorted(fair, key=lambda y: y[1], reverse=True)[:10]
 
