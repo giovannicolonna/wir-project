@@ -63,6 +63,25 @@ for line in states:
 states.close()
 
 db = []
+db2 = []
+
+for k, v in users_db.iteritems():
+    d2 = OrderedDict()
+    avg = 0.0
+
+    for rev in v:
+        try:
+            avg += float(rev['rate'])
+
+        except TypeError:
+            continue
+
+    d2['user_ID'] = k
+    d2['avg_rating'] = avg/len(v)
+    d2['reviews'] = v
+    db2.append(d2)
+
+
 for k, v in users_db.iteritems():
     d = OrderedDict()
     rate = 0.0
@@ -94,6 +113,9 @@ for k, v in users_db.iteritems():
     d['overall'] = overall/len(v)
     db.append(d)
 
+out2 = open("users_pred.json", 'w')
+out2.write(json.dumps(db2, indent=4))
+out2.close()
 
 output = open("users.json", 'w')
 output.write(json.dumps(db, indent=4))

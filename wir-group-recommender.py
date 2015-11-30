@@ -200,6 +200,7 @@ repetitions = 0
 
 for i_f in os.listdir("groups"):
     if i_f[:1] == ".":  # skip .DS_Store
+
         continue
 
     repetitions += 1
