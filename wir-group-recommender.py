@@ -161,6 +161,7 @@ def of_mix(bv, g, k=0.5):
 if not os.path.exists(PATH):
     os.mkdir(PATH)
 
+'''
 for repetitions in range(0, 100):
 
     output = open(PATH+"/output_group"+str(repetitions)+".txt", 'w')
@@ -193,6 +194,47 @@ for repetitions in range(0, 100):
     output.close()
 
     print repetitions
+'''
+
+repetitions = 0
+
+for i_f in os.listdir("groups"):
+    if i_f[:1] == ".":  # skip .DS_Store
+        continue
+
+    repetitions += 1
+
+    with open("groups/"+i_f, 'r') as input_file:
+        group = json.load(input_file)
+
+    sum = of_sum(beers_vector, group)
+    min = of_min(beers_vector, group)
+    fair = of_fair(beers_vector, group, 0.5)
+    mix = of_mix(beers_vector, group, 0.5)
+
+    output = open(PATH+"/output_group"+str(repetitions)+".txt", 'w')
+
+    output.write("---------- SUM ----------\n")
+    for beer in sum:
+        output.write(str(beer)+'\n')
+    output.write('\n\n')
+
+    output.write("---------- MIN ----------\n")
+    for beer in min:
+        output.write(str(beer)+'\n')
+    output.write('\n\n')
+
+    output.write("---------- FAIR ---------\n")
+    for beer in fair:
+        output.write(str(beer)+'\n')
+    output.write('\n\n')
+
+    output.write("---------- MIX ----------\n")
+    for beer in mix:
+        output.write(str(beer)+'\n')
+    output.close()
+
+
 
 
 
