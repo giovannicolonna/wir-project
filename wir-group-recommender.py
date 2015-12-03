@@ -38,7 +38,7 @@ def dot_product(beer, user):
 
 
 GROUP_SIZE = 20
-PATH = "Recommendations"
+PATH = "recommendations"
 
 beers = []
 
