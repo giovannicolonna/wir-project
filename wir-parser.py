@@ -148,6 +148,7 @@ if INPUT == "top-250" or INPUT == "top-us":
                                         netControl = False
                                     except requests.RequestException:
                                         time.sleep(4)
+                                        print "Connection error in reviewer point page, retrying..."
                                         logging.error("Connection error in reviewer point page, retrying...")
 
                                 soup = BeautifulSoup(html, 'lxml')
